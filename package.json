@@ -5,18 +5,13 @@
     "main": "dist/main/main.js",
     "scripts": {
         "clean": "rm -rf build dist static .cache",
-
         "copy-files": "cpx 'src/renderer/**/*.{html,marko,js,css}' dist/renderer",
         "copy-files:watch": "cpx 'src/renderer/**/*.{html,marko,js,css}' dist/renderer --watch",
-
         "build": "npm run clean && tsc -p . && npm run copy-files",
-
         "lasso": "lasso -e dist/renderer/app.js -i dist/renderer/app.html -p lasso-marko --production",
         "lasso:watch": "lasso -e dist/renderer/app.js -i dist/renderer/app.html -p lasso-marko --watch",
-
         "start:dev": "cross-env NODE_ENV=development electron ./dist/main/main.js",
         "start:prod": "cross-env NODE_ENV=production electron ./dist/main/main.js",
-
         "debug": "npm run build && npm run lasso",
         "prod": "npm run build && npm run lasso && npm run start:prod",
         "dev": "npm run build && concurrently 'npm run copy-files:watch' 'npm run lasso:watch' 'npm run start:dev'"
@@ -33,7 +28,8 @@
     "author": "Ardelean Calin-Petru (ardelean.calin@outlook.com)",
     "license": "MIT",
     "dependencies": {
-        "marko": "^4.4.28"
+        "marko": "^4.4.28",
+        "marko-path-router": "^0.7.3"
     },
     "devDependencies": {
         "concurrently": "^3.5.0",

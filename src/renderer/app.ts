@@ -1,3 +1,3 @@
-const myComponent = require("./views/pages/home/index.marko");
+const App = require("./views/components/app");
 
-myComponent.renderSync().appendTo(document.body);
+App.renderSync().appendTo(document.body);
