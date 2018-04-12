@@ -1,0 +1,50 @@
+{
+    "name": "desktop-application-template",
+    "version": "1.0.0",
+    "description": "A simple template to aid in constructing beautiful desktop applications using Electron and Markojs.",
+    "main": "dist/main/main.js",
+    "scripts": {
+        "clean": "rm -rf build dist static .cache",
+
+        "copy-files": "cpx 'src/renderer/**/*.{html,marko,js,css}' dist/renderer",
+        "copy-files:watch": "cpx 'src/renderer/**/*.{html,marko,js,css}' dist/renderer --watch",
+
+        "build": "npm run clean && tsc -p . && npm run copy-files",
+
+        "lasso": "lasso -e dist/renderer/app.js -i dist/renderer/app.html -p lasso-marko --production",
+        "lasso:watch": "lasso -e dist/renderer/app.js -i dist/renderer/app.html -p lasso-marko --watch",
+
+        "start:dev": "cross-env NODE_ENV=development electron ./dist/main/main.js",
+        "start:prod": "cross-env NODE_ENV=production electron ./dist/main/main.js",
+
+        "debug": "npm run build && npm run lasso",
+        "prod": "npm run build && npm run lasso && npm run start:prod",
+        "dev": "npm run build && concurrently 'npm run copy-files:watch' 'npm run lasso:watch' 'npm run start:dev'"
+    },
+    "keywords": [
+        "electron",
+        "marko",
+        "webpack",
+        "desktop",
+        "markojs",
+        "bulma",
+        "font-awesome"
+    ],
+    "author": "Ardelean Calin-Petru (ardelean.calin@outlook.com)",
+    "license": "MIT",
+    "dependencies": {
+        "marko": "^4.4.28"
+    },
+    "devDependencies": {
+        "concurrently": "^3.5.0",
+        "cpx": "^1.5.0",
+        "cross-env": "^5.0.5",
+        "electron": "^1.8.4",
+        "electron-reload": "^1.2.1",
+        "lasso": "^3.1.4",
+        "lasso-marko": "^2.4.0",
+        "tslint": "^5.9.1",
+        "tslint-config-prettier": "^1.10.0",
+        "typescript": "^2.8.1"
+    }
+}
