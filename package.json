@@ -1,7 +1,7 @@
 {
-    "name": "desktop-application-template",
+    "name": "electro",
     "version": "1.0.0",
-    "description": "A simple template to aid in constructing beautiful desktop applications using Electron and Markojs.",
+    "description": "An electron template leveraging typescript, marko, lasso and bulma",
     "main": "dist/main/main.js",
     "scripts": {
         "clean": "rm -rf build dist static .cache",
@@ -17,17 +17,19 @@
         "dev": "npm run build && concurrently 'npm run copy-files:watch' 'npm run lasso:watch' 'npm run start:dev'"
     },
     "keywords": [
+        "typescript",
         "electron",
-        "marko",
-        "webpack",
         "desktop",
+        "marko",
+        "lasso",
         "markojs",
-        "bulma",
-        "font-awesome"
+        "lassojs",
+        "bulma"
     ],
-    "author": "Ardelean Calin-Petru (ardelean.calin@outlook.com)",
+    "author": "Jarvis Prestidge (jarvisprestidge@gmail.com)",
     "license": "MIT",
     "dependencies": {
+        "electroload": "^1.0.0",
         "marko": "^4.4.28",
         "marko-path-router": "^0.7.3"
     },

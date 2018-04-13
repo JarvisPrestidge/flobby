@@ -1,15 +1,19 @@
 import { app, BrowserWindow } from "electron";
+import electroload from "electroload";
 import * as path from "path";
 import * as url from "url";
 
 let mainWindow: Electron.BrowserWindow;
 
+// Enable live reloading!
 if (process.env.NODE_ENV === "development") {
-    // Enable live reloading!
-    require("electron-reload")(path.join(__dirname, "..", "renderer", "app.html"));
+    const targetFile = path.join(__dirname, "..", "renderer", "app.html");
+    const targetUri = `file://${targetFile}`;
+    electroload(targetFile, targetUri);
 }
 
-function createWindow() {
+const createWindow = () => {
+
     // Create the browser window.
     mainWindow = new BrowserWindow({
         title: "Electro",
