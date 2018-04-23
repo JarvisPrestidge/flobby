@@ -9,7 +9,8 @@
         "copy-files": "cpx \"src/renderer/**/*.{html,marko,js,css}\" dist/renderer",
         "copy-files:watch": "cpx \"src/renderer/**/*.{html,marko,js,css}\" dist/renderer --watch",
         "build": "npm run clean && npm run tsc && npm run copy-files",
-        "lasso": "lasso -e dist/renderer/app.js -i dist/renderer/app.html -p lasso-marko --production",
+        "lasso:dev": "cross-env NODE_ENV=development ts-node build.ts",
+        "lasso:prod": "cross-env NODE_ENV=production ts-node build.ts",
         "lasso:watch": "lasso -e dist/renderer/app.js -i dist/renderer/app.html -p lasso-marko --watch",
         "start:dev": "cross-env NODE_ENV=development electron ./dist/main/main.js",
         "start:prod": "cross-env NODE_ENV=production electron ./dist/main/main.js",
@@ -35,6 +36,8 @@
         "marko-path-router": "^0.7.3"
     },
     "devDependencies": {
+        "@types/lasso": "^2.4.0",
+        "browserfs": "^1.4.3",
         "concurrently": "^3.5.0",
         "cpx": "^1.5.0",
         "cross-env": "^5.0.5",
@@ -43,6 +46,7 @@
         "lasso": "^3.1.4",
         "lasso-cli": "^2.0.11",
         "lasso-marko": "^2.4.0",
+        "ts-node": "^6.0.0",
         "tslint": "^5.9.1",
         "tslint-config-prettier": "^1.10.0",
         "typescript": "^2.8.1"
