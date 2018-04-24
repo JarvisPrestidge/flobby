@@ -1,3 +1,3 @@
 const App = require("./views/components/app");
 
-App.renderSync().appendTo(document.body);
+App.renderSync().replace(document.getElementById("application-mount-point"));

@@ -25,7 +25,7 @@ const createWindow = () => {
     // and load the index.html of the app.
     mainWindow.loadURL(
         url.format({
-            pathname: path.join(__dirname, "../renderer/app.html"),
+            pathname: path.join(__dirname, "..", "..", "static", "index.html"),
             protocol: "file",
             slashes: true
         })
@@ -42,6 +42,8 @@ const createWindow = () => {
         mainWindow = null as any;
     });
 }
+
+export const testFunc = () => "Wanka";
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

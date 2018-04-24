@@ -4,14 +4,28 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Electron Main Prod",
+            "name": "Debug Electron main",
             "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
             "program": "${workspaceRoot}/src/main/main.ts",
             "preLaunchTask": "npm: debug",
             "stopOnEntry": true,
             "sourceMaps": true,
-            "outFiles": ["${workspaceRoot}/dist/**/*.js"],
+            "outFiles": [
+                "${workspaceRoot}/dist/**/*.js"
+            ],
             "protocol": "inspector"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug build script",
+            "runtimeArgs": [
+                "-r",
+                "ts-node/register"
+            ],
+            "args": [
+                "${workspaceFolder}/scripts/build.ts"
+            ]
         },
         {
             "type": "node",
