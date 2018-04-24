@@ -1,13 +1,16 @@
-import { app, BrowserWindow } from "electron";
-import electroload from "electroload";
 import * as path from "path";
 import * as url from "url";
+import electroload from "electroload";
+import { app, BrowserWindow } from "electron";
+import "./events";
 
 let mainWindow: Electron.BrowserWindow;
 
+const outputDir = path.join(__dirname, "..", "..", "static");
+
 // Enable live reloading!
 if (process.env.NODE_ENV === "development") {
-    const targetFile = path.join(__dirname, "..", "renderer", "app.html");
+    const targetFile = path.join(outputDir, "index.html");
     const targetUri = `file://${targetFile}`;
     electroload(targetFile, targetUri);
 }
@@ -25,7 +28,7 @@ const createWindow = () => {
     // and load the index.html of the app.
     mainWindow.loadURL(
         url.format({
-            pathname: path.join(__dirname, "..", "..", "static", "index.html"),
+            pathname: path.join(outputDir, "index.html"),
             protocol: "file",
             slashes: true
         })

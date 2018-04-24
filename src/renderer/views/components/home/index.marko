@@ -1,14 +1,27 @@
 static {
-    const app = window.require("electron").remote.app;
+    const { ipcRenderer } = window.require("electron");
 }
 
 class {
+    onCreate() {
+        this.state = {
+            message: null
+        };
+    }
+
     onMount() {
         console.log("fired onMount");
+        this.initIpcListeners();
+    }
+
+    initIpcListeners() {
+        ipcRenderer.on("testerino-repsonse", (event, arg) => {
+            this.state.message = arg.message;
+        });
     }
 
     testerino() {
-        console.log(`app: ${app.testFunc()}`);
+        ipcRenderer.send("testerino")
     }
 }
 
@@ -16,6 +29,7 @@ section class="section"
     div class="container"
         h1 class="title" -- Home
         p class="subtitle" -- Home page!
-        router-link path='/help' -- Wooooow
+        router-link path="/help" -- Wooooow
         a class="button is-primary is-large" on-click("testerino") -- Electron test
 
+        p -- ${state.message}
