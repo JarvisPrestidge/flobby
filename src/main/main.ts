@@ -19,9 +19,9 @@ const createWindow = () => {
 
     // Create the browser window.
     mainWindow = new BrowserWindow({
-        title: "Electro",
         height: 600,
         width: 800,
+        frame: false,
         autoHideMenuBar: true
     });
 

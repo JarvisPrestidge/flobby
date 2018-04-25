@@ -6,8 +6,8 @@
     "scripts": {
         "tsc": "tsc -p .",
         "clean": "rm -rf build dist static .cache",
-        "copy-files": "cpx \"src/renderer/**/*.{html,marko,js,css,json}\" dist/renderer",
-        "copy-files:watch": "cpx \"src/renderer/**/*.{html,marko,js,css,json}\" dist/renderer --watch",
+        "copy-files": "cpx \"src/renderer/**/*.{html,marko,js,css,json,png}\" dist/renderer",
+        "copy-files:watch": "cpx \"src/renderer/**/*.{html,marko,js,css,json,png}\" dist/renderer --watch",
         "build": "npm run clean && npm run tsc && npm run copy-files",
         "lasso": "npm run build && ts-node scripts/build.ts",
         "start": "electron ./dist/main/main.js",
@@ -30,11 +30,14 @@
     "license": "MIT",
     "dependencies": {
         "marko": "^4.4.28",
-        "marko-path-router": "^0.7.3"
+        "marko-path-router": "^0.7.3",
+        "openport": "^0.0.5",
+        "public-ip": "^2.4.0"
     },
     "devDependencies": {
         "@lasso/marko-taglib": "^1.0.10",
         "@types/lasso": "^2.4.0",
+        "@types/public-ip": "^2.3.0",
         "browserfs": "^1.4.3",
         "concurrently": "^3.5.0",
         "cpx": "^1.5.0",

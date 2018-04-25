@@ -1,11 +1,14 @@
 static {
-    const { ipcRenderer } = window.require("electron");
+    const { ipcRenderer, shell } = window.require("electron");
 }
 
 class {
     onCreate() {
         this.state = {
-            message: null
+            isDefault: true,
+            isCreatingCode: false,
+            isEnteringCode: false,
+            lobbyCode: null
         };
     }
 
@@ -15,21 +18,152 @@ class {
     }
 
     initIpcListeners() {
-        ipcRenderer.on("testerino-repsonse", (event, arg) => {
-            this.state.message = arg.message;
+        ipcRenderer.on("create-new-lobby-response", (event, arg) => {
+            this.state.lobbyCode = arg.lobbyCode;
+            this.state.isCreatingCode = true;
+            this.state.isDefault = false;
         });
     }
 
-    testerino() {
-        ipcRenderer.send("testerino")
+    resetState() {
+        console.log("fired resetState()");
+        this.state = {
+            isDefault: true,
+            isCreatingCode: false,
+            isEnteringcode: false,
+            lobbyCode: null
+        };
+    }
+
+    createLobbyPressed() {
+        ipcRenderer.send("create-new-lobby");
+    }
+
+    enterLobbyPressed() {
+        this.state.isDefault = false;
+        this.state.isEnteringCode = true;
+    }
+
+    enterLobby() {
+        ipcRenderer.send("enter-existing-lobby");
+        console.log("Entering existing lobby");
+    }
+
+    copyToClipboard() {
+        const str = this.getEl("m-generated-code").value;
+        const el = document.createElement("textarea");
+        el.value = str;
+        el.setAttribute("readonly", "");
+        el.style.position = "absolute";
+        el.style.left = "-9999px";
+        document.body.appendChild(el);
+        const selected = document.getSelection().rangeCount > 0
+            ? document.getSelection().getRangeAt(0)
+            : false;
+        el.select();
+        document.execCommand("copy");
+        document.body.removeChild(el);
+        if (selected) {
+            document.getSelection().removeAllRanges();
+            document.getSelection().addRange(selected);
+        }
+    }
+
+    externalUrlHandler(event, el) {
+        // Prevent the click
+        event.preventDefault();
+
+        // Get the "src" attribute value
+        const href = el.getAttribute("src");
+
+        // Open url in native OS browser
+        shell.openExternal(href);
     }
 }
 
-section class="section"
-    div class="container"
-        h1 class="title" -- Home
-        p class="subtitle" -- Home page!
-        router-link path="/help" -- Wooooow
-        a class="button is-primary is-large" on-click("testerino") -- Electron test
+section class="hero is-dark is-fullheight"
 
-        p -- ${state.message}
+    // Head
+    div class="hero-head"
+        header class="navbar"
+            div class="container"
+                div class="navbar-brand"
+                    a class="navbar-item" on-click("resetState")
+                        span class="icon"
+                            -- <i class="fas fa-undo-alt"/>
+                    span class="navbar-burger burger" data-target="navbarMenuHeroC"
+                        span
+                        span
+                        span
+                div id="navbarMenuHeroC" class="navbar-menu"
+                    div class="navbar-end"
+                        a class="navbar-item is-active" -- Home
+                        a class="navbar-item" -- Examples
+                        a class="navbar-item" -- Documentation
+                        span class="navbar-item"
+                            a class="button is-success is-inverted"
+                                span class="icon"
+                                    -- <i class="fab fa-github"/>
+                                span -- Download
+
+    // Content
+    div class="hero-body"
+        div class="container has-text-centered"
+            h1 class="title is-size-1" -- Lobby
+            h2 class="subtitle" -- Helping you get into lobbies with friends
+
+            if(state.isDefault)
+                section class="section"
+                    a class="button is-primary is-large" on-click("createLobbyPressed") -- Create New Lobby
+
+            if(state.isDefault)
+                section class="section"
+                    a class="button is-primary is-large" on-click("enterLobbyPressed") -- Enter Lobby Code
+
+            if(state.isCreatingCode)
+                section class="section has-text-centered"
+                    div class="field has-addons"
+                        div class="control is-expanded"
+                            input [
+                                key="m-generated-code"
+                                class="input"
+                                type="text"
+                                value="${state.lobbyCode}"
+                                readonly
+                            ]
+                        div class="control"
+                            a class="button is-info" on-click("copyToClipboard") -- Copy to Clipboard
+                            // router-link path="/help" -- Change me
+
+            if(state.isEnteringCode)
+                section class="section has-text-centered"
+
+                    input class="input" type="text" placeholder="Enter name..."
+
+                    div class="field has-addons"
+                        div class="control is-expanded"
+                            input [
+                                key="m-entered-code"
+                                class="input"
+                                type="text"
+                                placeholder="Enter lobby code here..."
+                            ]
+                        div class="control"
+                            a class="button is-success" on-click("enterLobby") -- Enter Lobby
+                            // router-link path="/help" -- Change me
+
+    // Footer
+    div class="hero-foot"
+        nav class="tabs is-boxed is-fullwidth"
+            div class="container"
+                ul
+                    li
+                        a class="button is-dark" src="https://github.com/JarvisPrestidge" target="_blank" on-click("externalUrlHandler")
+                            span class="icon"
+                                -- <i class="fab fa-github"/>
+                            span -- GitHub
+                    li
+                        a class="button is-dark" src="https://github.com/JarvisPrestidge/electro/issues" target="_blank" on-click("externalUrlHandler")
+                            span class="icon"
+                                -- <i class="fas fa-bug"/>
+                            span -- Issues

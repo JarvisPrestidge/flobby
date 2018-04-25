@@ -1,4 +1,5 @@
 import { ipcMain, IpcRenderer } from "electron";
+import { getLobbyCode } from "../utils/cypto";
 
 /**
  * Required to patch the shitty electron type definitions
@@ -9,13 +10,18 @@ interface IpcRendererEvent {
     sender: IpcRenderer;
 }
 
-ipcMain.on("testerino", (event: IpcRendererEvent, ...args: any[]) => {
+ipcMain.on("create-new-lobby", async (event: IpcRendererEvent, ...args: any[]) => {
+
     if (args) {
         console.log(args);
     }
-    // Construct response object
+
+    // Get public ip and open port
+    const lobbyCode = await getLobbyCode();
+
     const response = {
-        message: "wasssup homie"
+        lobbyCode
     };
-    event.sender.send("testerino-repsonse", response);
+
+    event.sender.send("create-new-lobby-response", response);
 });
