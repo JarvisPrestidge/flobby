@@ -44,8 +44,8 @@ class {
         this.state.isEnteringCode = true;
     }
 
-    enterLobby() {
-        ipcRenderer.send("enter-existing-lobby");
+    joinLobby(lobbyCode) {
+        ipcRenderer.send("enter-existing-lobby", lobbyCode);
         console.log("Entering existing lobby");
     }
 
@@ -109,7 +109,7 @@ section class="hero is-dark is-fullheight"
     // Content
     div class="hero-body"
         div class="container has-text-centered"
-            h1 class="title is-size-1" -- Lobby
+            h1 class="title is-size-1" -- Flobby
             h2 class="subtitle" -- Helping you get into lobbies with friends
 
             if(state.isDefault)
@@ -122,35 +122,60 @@ section class="hero is-dark is-fullheight"
 
             if(state.isCreatingCode)
                 section class="section has-text-centered"
-                    div class="field has-addons"
-                        div class="control is-expanded"
-                            input [
-                                key="m-generated-code"
-                                class="input"
-                                type="text"
-                                value="${state.lobbyCode}"
-                                readonly
-                            ]
-                        div class="control"
-                            a class="button is-info" on-click("copyToClipboard") -- Copy to Clipboard
-                            // router-link path="/help" -- Change me
+
+                    // Name
+                    div class="columns"
+                        div class="column"
+                            input class="input" type="text" placeholder="Enter name..."
+
+                    // Name
+                    div class="columns"
+                        div class="column"
+                            div class="field has-addons"
+                                div class="control is-expanded"
+                                    input [
+                                        key="m-generated-code"
+                                        class="input"
+                                        type="text"
+                                        value="${state.lobbyCode}"
+                                        readonly
+                                    ]
+                                div class="control"
+                                    a class="button is-info" on-click("copyToClipboard") -- Copy to Clipboard
+                                    // router-link path="/help" -- Change me
+
+                    // Join Lobby
+                    div class="columns"
+                        div class="column"
+                            a class="button is-success is-large" on-click("joinLobby", state.lobbyCode) -- Join Lobby
 
             if(state.isEnteringCode)
                 section class="section has-text-centered"
 
-                    input class="input" type="text" placeholder="Enter name..."
+                    // Name
+                    div class="columns"
+                        div class="column"
+                            input class="input" type="text" placeholder="Enter name..."
 
-                    div class="field has-addons"
-                        div class="control is-expanded"
-                            input [
-                                key="m-entered-code"
-                                class="input"
-                                type="text"
-                                placeholder="Enter lobby code here..."
-                            ]
-                        div class="control"
-                            a class="button is-success" on-click("enterLobby") -- Enter Lobby
-                            // router-link path="/help" -- Change me
+                    // Enter Lobby Code
+                    div class="columns"
+                        div class="column"
+                            div class="field has-addons"
+                                div class="control is-expanded"
+                                    input [
+                                        key="m-entered-code"
+                                        class="input"
+                                        type="text"
+                                        placeholder="Enter lobby code here..."
+                                    ]
+                                div class="control"
+                                    a class="button is-success" on-click("joinLobby") -- Join Lobby
+                                    // router-link path="/help" -- Change me
+
+                    // Join Lobby
+                    div class="columns"
+                        div class="column"
+                            a class="button is-success is-large" on-click("joinLobby", state.lobbyCode) -- Join Lobby
 
     // Footer
     div class="hero-foot"

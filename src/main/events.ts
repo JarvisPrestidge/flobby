@@ -1,5 +1,5 @@
 import { ipcMain, IpcRenderer } from "electron";
-import { getLobbyCode } from "../utils/cypto";
+import { getLobbyCode } from "./utils/cypto";
 
 /**
  * Required to patch the shitty electron type definitions
