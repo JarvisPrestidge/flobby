@@ -1,19 +1,11 @@
 import * as path from "path";
 import * as url from "url";
-import electroload from "electroload";
 import { app, BrowserWindow } from "electron";
 import "./events";
 
 let mainWindow: Electron.BrowserWindow;
 
 const outputDir = path.join(__dirname, "..", "..", "static");
-
-// Enable live reloading!
-if (process.env.NODE_ENV === "development") {
-    const targetFile = path.join(outputDir, "index.html");
-    const targetUri = `file://${targetFile}`;
-    electroload(targetFile, targetUri);
-}
 
 const createWindow = () => {
 

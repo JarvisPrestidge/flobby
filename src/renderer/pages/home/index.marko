@@ -1,0 +1,41 @@
+import { history } from "marko-path-router"
+
+class {
+
+    onMount() {
+        console.log("fired [home] onMount()");
+        this.electron = window.require("electron");
+        this.initIpcListeners();
+    }
+
+    initIpcListeners() {
+        console.log("fired [home] initIpcListeners()");
+        this.electron.ipcRenderer.on("create-lobby-response", (event, response) => {
+            // Store lobby code
+            localStorage.setItem("lobbyCode", response.lobbyCode);
+            // Navigate to create page
+            history.replace("/create");
+        });
+    }
+
+    createLobby() {
+        console.log("fired [home] crateLobbyHandler()");
+        this.electron.ipcRenderer.send("create-lobby");
+    }
+}
+
+// Content
+div class="hero-body"
+
+    div class="container has-text-centered"
+        h1 class="title is-size-1" -- Flobby
+        h2 class="subtitle" -- Helping players create competivite lobbies with one another
+
+        section class="section"
+            a class="button is-primary is-large" on-click("createLobby") -- Create New Lobby
+
+
+        section class="section"
+            router-link path="/join" class="button is-primary is-large" -- Join Lobby
+
+

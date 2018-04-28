@@ -1,0 +1,59 @@
+import { history } from "marko-path-router"
+
+class {
+    onCreate() {
+        this.state = {
+            name: null
+        };
+    }
+
+    onMount() {
+        console.log("fired [name] onMount()");
+        this.electron = window.require("electron");
+    }
+
+    nextHandler(event, el) {
+        console.log("fired [name] next()");
+        const name = this.getEl("m-name-input").value;
+        // Persist name for current session
+        localStorage.setItem("name", name);
+        // Persist name on file system
+        this.electron.ipcRenderer.send("store-name", name);
+        // Navigate to home
+        history.replace("/home");
+    }
+
+    keyupHandler(event, el) {
+        console.log("fired [name] keyupHandler()");
+        el.addEventListener("keyup", (event) => {
+            event.preventDefault();
+            if (event.keyCode === 13) {
+                this.nextHandler();
+            }
+        });
+    }
+}
+
+// Content
+div class="hero-body"
+    div class="container has-text-centered"
+        section class="section has-text-centered"
+
+            h2 class="subtitle" -- Enter your Fortnite in-game name
+
+            // Name
+            div class="columns"
+                div class="column"
+                    input [
+                        class="input"
+                        type="text"
+                        placeholder="Enter name..."
+                        key="m-name-input"
+                        on-keyup("keyupHandler")
+                    ]
+
+            // Next
+            div class="columns"
+                div class="column"
+                    a class="button is-success is-large" on-click("nextHandler") -- Next
+

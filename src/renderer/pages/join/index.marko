@@ -1,0 +1,39 @@
+class {
+    onMount() {
+        console.log("fired onMount");
+        this.electron = window.require("electron");
+    }
+
+    joinLobby() {
+        const lobbyCode = this.getEl("m-lobby-code").value;
+        this.electron.ipcRenderer.send("join-lobby", lobbyCode);
+        console.log("Entering existing lobby");
+    }
+}
+
+// Content
+div class="hero-body"
+
+    div class="container has-text-centered"
+        h1 class="title is-size-1" -- Enter Lobby Code
+
+        section class="section has-text-centered"
+
+            // Name
+            div class="columns"
+                div class="column"
+                    div class="field has-addons"
+                        div class="control is-expanded"
+                            input [
+                                key="m-lobby-code"
+                                class="input"
+                                type="text"
+                            ]
+                        div class="control"
+                            a class="button is-info" -- TODO
+
+            // Join Lobby
+            div class="columns"
+                div class="column"
+                    a class="button is-success is-large" on-click("joinLobby") -- Join Lobby
+

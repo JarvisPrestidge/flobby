@@ -1,3 +1,5 @@
+import { history } from "marko-path-router"
+
 class {
     onCreate() {
         this.state = {
@@ -6,10 +8,18 @@ class {
     }
 
     onMount() {
-        console.log("fired page-create:onMount");
+        console.log("fired [create] onMount()");
+        const lobbyCode = localStorage.getItem("lobbyCode");
+        this.state.lobbyCode = lobbyCode;
+    }
+
+    joinLobby() {
+        // Navigate to create page
+        history.replace("/lobby");
     }
 
     copyToClipboard() {
+        console.log("fired [create] copyToClipboard()");
         const str = this.getEl("m-generated-code").value;
         const el = document.createElement("textarea");
         el.value = str;
@@ -34,15 +44,11 @@ class {
 div class="hero-body"
 
     div class="container has-text-centered"
-        h1 class="title is-size-1" -- Flobby
-        h2 class="subtitle" -- Helping players get into lobbies with each other
+
+        // Title
+        h2 class="subtitle" -- Share this code with players or teams you intend to play against
 
         section class="section has-text-centered"
-
-            // Name
-            div class="columns"
-                div class="column"
-                    input class="input" type="text" placeholder="Enter name..."
 
             // Name
             div class="columns"
@@ -62,4 +68,4 @@ div class="hero-body"
             // Join Lobby
             div class="columns"
                 div class="column"
-                    a class="button is-success is-large" on-click("joinLobby", state.lobbyCode) -- Join Lobby
+                    a class="button is-success is-large" on-click("joinLobby") -- Join Lobby

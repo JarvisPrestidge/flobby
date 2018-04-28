@@ -12,8 +12,8 @@ class {
 
     exit() {
         console.log("fired resetState()");
-        this.getComponent("m-app-router").navigateToPage("home");
         // TODO: Reset any global state here
+        this.electron.ipcRenderer.send("exit-app");
     }
 
     externalUrlHandler(event, el) {
@@ -29,17 +29,14 @@ section class="hero is-dark is-fullheight"
     div class="hero-head"
         div class="container"
             nav class="navbar"
-                div class="navbar-menu"
-                    div class="navbar-start"
-                        a class="navbar-item is-active" on-click("reset")
-                            span class="icon"
-                                -- <i class="fas fa-undo-alt"/>
+                div class="navbar-brand"
+                    a class="navbar-item" on-click("reset")
+                        span class="icon"
+                            -- <i class="fas fa-undo-alt"/>
 
-                div class="navbar-menu"
-                    div class="navbar-end"
-                        a class="navbar-item is-active" on-click("exit")
-                            span class="icon"
-                                -- <i class="fas fa-times"/>
+                    a class="navbar-item" on-click("exit") style="float: right"
+                        span class="icon"
+                            -- <i class="fas fa-times"/>
 
     // Application mount point
     app-router key="m-app-router"

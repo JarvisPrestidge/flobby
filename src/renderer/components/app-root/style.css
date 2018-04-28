@@ -2,7 +2,7 @@ html {
     overflow: hidden;
 }
 
-a,
+/* a,
 button {
     -webkit-app-region: no-drag;
 }
@@ -10,4 +10,4 @@ button {
 .hero-head {
     -webkit-app-region: drag;
 }
-
+ */

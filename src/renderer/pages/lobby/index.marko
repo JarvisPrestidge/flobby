@@ -1,0 +1,50 @@
+class {
+
+    onCreate() {
+        this.state = {
+            name: null,
+            phase: "waiting for players to ready up..."
+        };
+    }
+
+    onMount() {
+        console.log("fired onMount");
+        this.getName();
+    }
+
+    getName() {
+        const name = localStorage.getItem("name");
+        this.state.name = name;
+    }
+
+    ready() {
+        this.getComponent("m-user").ready();
+    }
+}
+
+// Content
+div class="hero-body"
+
+    div class="container has-text-centered"
+
+        // Ready up
+        section id="ready-up" class="section has-text-centered"
+
+            a class="button is-success is-large" on-click("ready") -- READY UP
+
+        // Players
+        section id="player-list" class="section has-text-centered"
+
+            div class="columns is-multiline"
+
+                lobby-player key="m-user" title="${state.name}"
+
+                lobby-player title="player 1"
+                lobby-player title="player 2"
+                lobby-player title="player 3"
+                lobby-player title="player 4"
+
+        // Info
+        section id="phase-info" class="section has-text-centered"
+
+            h2 class="subtitle" -- ${state.phase}

@@ -1,0 +1,34 @@
+class {
+
+    onCreate() {
+        this.state = {
+            isReady: false
+        };
+    }
+
+    onMount() {
+        console.log("fired onMount");
+        this.electron = window.require("electron");
+    }
+
+    ready() {
+        this.state.isReady = true;
+    }
+}
+
+// Content
+div class="column is-half"
+
+    div id="player-box" class="box"
+        div class="columns"
+
+            // Player name
+            div class="column is-three-quarters is-narrow"
+                h1 class="title has-text-left" -- ${input.title}
+
+            // Ready status
+            div class="column is-one-quarter is-narrow"
+                if(state.isReady)
+                    a class="button is-success" style="float: right;" -- Ready
+                else
+                    a class="button is-danger is-loading" style="float: right;" -- Ready

@@ -1,8 +1,8 @@
-import * as nameComponent from "../page-name"
-import * as homeComponent from "../page-home"
-import * as createComponent from "../page-create"
-import * as joinComponent from "../page-join"
-import * as lobbyComponent from "../page-lobby"
+import * as nameComponent from "../../pages/name"
+import * as homeComponent from "../../pages/home"
+import * as createComponent from "../../pages/create"
+import * as joinComponent from "../../pages/join"
+import * as lobbyComponent from "../../pages/lobby"
 
 import { Router, history } from "marko-path-router"
 
@@ -35,8 +35,8 @@ class {
             .getComponent()
 
         router.beforeEach((from, to, next) => {
-            console.log(`BeforeEach hook. Transitioning from ${from} to ${to}`)
-            next()
+            console.log(`BeforeEach hook. Transitioning from ${from} to ${to}`);
+            next();
         });
 
         router.afterEach((from, to) => {
