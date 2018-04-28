@@ -1,0 +1,13 @@
+html {
+    overflow: hidden;
+}
+
+a,
+button {
+    -webkit-app-region: no-drag;
+}
+
+.hero-head {
+    -webkit-app-region: drag;
+}
+

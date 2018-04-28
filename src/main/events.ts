@@ -1,5 +1,6 @@
 import { ipcMain, IpcRenderer } from "electron";
 import { getLobbyCode } from "./utils/cypto";
+import Store = require("electron-store");
 
 /**
  * Required to patch the shitty electron type definitions
@@ -10,18 +11,19 @@ interface IpcRendererEvent {
     sender: IpcRenderer;
 }
 
-ipcMain.on("create-new-lobby", async (event: IpcRendererEvent, ...args: any[]) => {
+// Create new instance of store
+const store = new Store();
 
-    if (args) {
-        console.log(args);
-    }
+ipcMain.on("create-lobby", async (event: IpcRendererEvent, ..._: any[]) => {
 
     // Get public ip and open port
     const lobbyCode = await getLobbyCode();
 
-    const response = {
-        lobbyCode
-    };
+    event.sender.send("create-lobby-response", { lobbyCode });
+});
 
-    event.sender.send("create-new-lobby-response", response);
+ipcMain.on("store-name", async (_: IpcRendererEvent, name: string) => {
+
+    // Persistently store user name
+    store.set("name", name);
 });

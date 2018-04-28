@@ -1,0 +1,36 @@
+class {
+    onCreate() {
+        this.state = {
+            name: null
+        };
+    }
+
+    onMount() {
+        console.log("fired onMount");
+        this.electron = window.require("electron");
+    }
+
+    nextButtonHandler(event, el) {
+        console.log("fired next()");
+        const name = this.getEl("m-name-input").value;
+        this.electron.ipcRenderer.send("store-name", name);
+    }
+}
+
+// Content
+div class="hero-body"
+    div class="container has-text-centered"
+        section class="section has-text-centered"
+
+            h2 class="subtitle" -- Enter your Fortnite in-game name
+
+            // Name
+            div class="columns"
+                div class="column"
+                    input class="input" type="text" placeholder="Enter name..." key="m-name-input"
+
+            // Next
+            div class="columns"
+                div class="column"
+                    router-link path="/home" class="button is-success is-large" on-click("nextButtonHandler") -- Next
+

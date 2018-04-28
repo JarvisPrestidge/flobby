@@ -6,7 +6,7 @@ require("marko/node-require").install();
 
 const projectRoot = path.join(__dirname, "..");
 const outputDir = path.join(projectRoot, "static");
-const templatePath = path.join(projectRoot, "dist", "renderer", "app.marko");
+const templatePath = path.join(projectRoot, "dist", "renderer");
 
 const isProduction = !!process.env.NODE_ENV;
 

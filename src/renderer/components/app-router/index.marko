@@ -1,0 +1,63 @@
+import * as nameComponent from "../page-name"
+import * as homeComponent from "../page-home"
+import * as createComponent from "../page-create"
+import * as joinComponent from "../page-join"
+import * as lobbyComponent from "../page-lobby"
+
+import { Router, history } from "marko-path-router"
+
+class {
+    onCreate() {
+        this.state = {
+            currentRoute: "/"
+        };
+    }
+
+    onMount() {
+        const self = this;
+        const state = self.state;
+
+        const routes = [
+            { path: '/', component: nameComponent },
+            { path: '/home', component: homeComponent },
+            { path: '/create', component: createComponent },
+            { path: '/join', component: joinComponent },
+            { path: '/lobby', component: lobbyComponent }
+        ];
+
+        const render = Router.renderSync({
+            routes: routes,
+            initialRoute: state.currentRoute
+        });
+
+        const router = this.router = render
+            .appendTo(this.getEl("m-router"))
+            .getComponent()
+
+        router.beforeEach((from, to, next) => {
+            console.log(`BeforeEach hook. Transitioning from ${from} to ${to}`)
+            next()
+        });
+
+        router.afterEach((from, to) => {
+            console.log(`AfterEach hook. Transitioning from ${from} to ${to}`)
+        });
+
+        state.currentRoute = router.currentRoute;
+
+        router.on('update', () => {
+            state.currentRoute = router.currentRoute
+            console.log(state.currentRoute);
+            console.log(router.currentRoute);
+        });
+    }
+
+    navigateToPage(route) {
+        // replace current route
+        history.replace(`/${route}`);
+    }
+}
+
+$ var currentRoute = state.currentRoute
+
+div id="router" key="m-router" no-update
