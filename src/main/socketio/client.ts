@@ -1,12 +1,62 @@
 import * as IO from "socket.io-client";
+const timesync = require("timesync");
 
-const io = IO.connect("http://localhost:3000", { reconnection: true });
+class SocketClient {
 
-// Add a connect listener
-io.on("connect", (socket: any) => {
-    console.log("Connected!", socket);
-});
+    private io: any;
+    private ts: any;
 
-io.emit("CH01", "me", "test msg");
+    constructor(ip: string, port: number) {
+        // Create koa + socket.io instances
+        console.log(ip);
+        const uri = `http://localhost:${port}`;
+        this.io = IO.connect(uri, { reconnection: true });
+        console.log("connecting to " + uri);
 
-// TODO: wrap in class and append to electron app
+        this.ts = timesync.create({
+            server: this.io,
+            interval: 5000
+        });
+
+        // Init event handlers
+        this.initEventHandlers();
+    }
+
+    private initEventHandlers() {
+
+        this.ts.on("sync", (state: any) => {
+            console.log("sync " + state + "");
+        });
+
+        this.ts.on("change", (offset: any) => {
+            console.log("changed offset: " + offset + " ms");
+        });
+
+        this.ts.send = (socket: any, data: any, timeout: number) => {
+            console.log("send", data);
+            return new Promise((resolve, reject) => {
+                const timeoutFn = setTimeout(reject, timeout);
+                socket.emit("timesync", data, () => {
+                    clearTimeout(timeoutFn);
+                    resolve();
+                });
+            });
+        };
+
+        this.io.on("timesync", (data: any) => {
+            // console.log('receive', data);
+            this.ts.receive(null, data);
+        });
+    }
+
+    public getTime(): number {
+        return this.ts.now();
+    }
+
+    public destroy(): void {
+        this.ts.destroy();
+    }
+}
+
+export default SocketClient;
+

@@ -1,7 +1,10 @@
 import { app, ipcMain, IpcRenderer } from "electron";
-import { getLobbyCode } from "./utils/cypto";
+import { getLobbyCode, getPortFromLobbyCode, getIpFromLobbyCode } from "./utils/cypto";
 import Store = require("electron-store");
 import { execAsAdmin } from "./utils/ahk";
+import SocketServer from "./socketio/server";
+import SocketClient from "./socketio/client";
+
 
 
 /**
@@ -22,12 +25,32 @@ ipcMain.on("create-lobby", async (event: IpcRendererEvent) => {
 
     console.log(lobbyCode);
 
+    const port = getPortFromLobbyCode(lobbyCode);
+
+    const socketServer = new SocketServer(port);
+
+    (global as any).server = socketServer.getApp();
+
     event.sender.send("create-lobby-response", { lobbyCode });
 });
 
 ipcMain.on("join-lobby", async (event: IpcRendererEvent, lobbyCode: string) => {
 
     console.log("fired Join-lobby from main", lobbyCode);
+
+    const ip = getIpFromLobbyCode(lobbyCode);
+    const port = getPortFromLobbyCode(lobbyCode);
+
+    const socketClient = new SocketClient(ip, port);
+
+    (global as any).client = socketClient;
+
+    event.sender.send("join-lobby-response");
+});
+
+ipcMain.on("execute-play", async (event: IpcRendererEvent, lobbyCode: string) => {
+
+    console.log("fired execute-play from main", lobbyCode);
 
     await execAsAdmin("blockUserInput");
     await execAsAdmin("bringToForeground");
@@ -38,7 +61,7 @@ ipcMain.on("join-lobby", async (event: IpcRendererEvent, lobbyCode: string) => {
 
     await execAsAdmin("executePlay");
 
-    event.sender.send("create-lobby-response");
+    event.sender.send("execute-play-response");
 });
 
 ipcMain.on("store-name", async (_: IpcRendererEvent, name: string) => {
