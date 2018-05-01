@@ -4,6 +4,7 @@ import Store = require("electron-store");
 import { execAsAdmin } from "./utils/ahk";
 import SocketServer from "./socketio/server";
 import SocketClient from "./socketio/client";
+import PortController from "./nat/punch";
 
 
 
@@ -26,6 +27,17 @@ ipcMain.on("create-lobby", async (event: IpcRendererEvent) => {
     console.log(lobbyCode);
 
     const port = getPortFromLobbyCode(lobbyCode);
+
+    const portController = new PortController();
+
+    const setupResult = await portController.setup();
+    console.log(setupResult);
+
+    const mappingResult = await portController.addPortMapping(port, port, 3600);
+    console.log(mappingResult);
+
+    const activeResult = await portController.getActivePortMapping();
+    console.log(activeResult);
 
     const socketServer = new SocketServer(port);
 

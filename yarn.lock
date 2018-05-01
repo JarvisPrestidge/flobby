@@ -2012,6 +2012,10 @@ ipaddr.js@1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.6.0.tgz#e3fa357b773da619f26e95f049d055c72796f86b"
 
+ipaddr.js@^1.6.0:
+  version "1.7.0"
+  resolved "https://truelayer.jfrog.io/truelayer/api/npm/npm/ipaddr.js/-/ipaddr.js-1.7.0.tgz?dl=https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.7.0.tgz#2206ed334afc32e01fed3ee838b6b2521068b9d2"
+
 is-absolute@^0.2.3:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/is-absolute/-/is-absolute-0.2.6.tgz#20de69f3db942ef2d87b9c2da36f172235b1b5eb"
@@ -2729,6 +2733,12 @@ ms@2.0.0:
 nan@^2.9.2:
   version "2.10.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.10.0.tgz#96d0cd610ebd58d4b4de9cc0c6828cda99c7548f"
+
+nat-puncher@^0.1.2:
+  version "0.1.2"
+  resolved "https://truelayer.jfrog.io/truelayer/api/npm/npm/nat-puncher/-/nat-puncher-0.1.2.tgz?dl=https://registry.yarnpkg.com/nat-puncher/-/nat-puncher-0.1.2.tgz#e09f6c955e803d5acc677595f74835d8e727adcc"
+  dependencies:
+    ipaddr.js "^1.6.0"
 
 needle@^2.2.0:
   version "2.2.0"
