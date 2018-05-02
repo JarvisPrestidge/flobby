@@ -1,12 +1,11 @@
-import { app, ipcMain, IpcRenderer } from "electron";
-import { getLobbyCode, getPortFromLobbyCode, getIpFromLobbyCode } from "./utils/cypto";
-import Store = require("electron-store");
-import { execAsAdmin } from "./utils/ahk";
-import SocketServer from "./socketio/server";
 import SocketClient from "./socketio/client";
-import PortController from "./nat/punch";
-
-
+import SocketServer from "./socketio/server";
+import { app, ipcMain, IpcRenderer } from "electron";
+import { execAsAdminAHK } from "./utils/exec";
+import { getIpFromLobbyCode, getLobbyCode, getPortFromLobbyCode } from "./utils/cypto";
+import { sleep } from "./utils/time";
+import Store = require("electron-store");
+import uPnP from "./nat/uPnP";
 
 /**
  * Required to patch the shitty electron type definitions
@@ -19,6 +18,7 @@ interface IpcRendererEvent {
 
 // Create new instance of store
 const store = new Store();
+(global as any).store = store;
 
 ipcMain.on("create-lobby", async (event: IpcRendererEvent) => {
     // Get public ip and open port
@@ -28,16 +28,18 @@ ipcMain.on("create-lobby", async (event: IpcRendererEvent) => {
 
     const port = getPortFromLobbyCode(lobbyCode);
 
-    const portController = new PortController();
+    let location;
+    let unsupported;
+    while (!location) {
+        location = (global as any).store.get("location");
+        unsupported = (global as any).store.get("unsupported");
+        if (unsupported) {
+            return event.sender.send("peer-to-peer-unsupported");
+        }
+        await sleep(200);
+    }
 
-    const setupResult = await portController.setup();
-    console.log(setupResult);
-
-    const mappingResult = await portController.addPortMapping(port, port, 3600);
-    console.log(mappingResult);
-
-    const activeResult = await portController.getActivePortMapping();
-    console.log(activeResult);
+    uPnP.forwardPort(port);
 
     const socketServer = new SocketServer(port);
 
@@ -64,14 +66,14 @@ ipcMain.on("execute-play", async (event: IpcRendererEvent, lobbyCode: string) =>
 
     console.log("fired execute-play from main", lobbyCode);
 
-    await execAsAdmin("blockUserInput");
-    await execAsAdmin("bringToForeground");
-    await execAsAdmin("hoverOnPlay");
+    await execAsAdminAHK("blockUserInput");
+    await execAsAdminAHK("bringToForeground");
+    await execAsAdminAHK("hoverOnPlay");
 
     // TODO: pass into executePlay a time relative to the system clock to
     // fire the play action.
 
-    await execAsAdmin("executePlay");
+    await execAsAdminAHK("executePlay");
 
     event.sender.send("execute-play-response");
 });
@@ -82,6 +84,11 @@ ipcMain.on("store-name", async (_: IpcRendererEvent, name: string) => {
 });
 
 ipcMain.on("exit-app", async () => {
+    // Remove all port mappings
+    const mappedPorts = (global as any).store.get("mappedPorts") as number[];
+    for (const port of mappedPorts) {
+        uPnP.deletePort(port);
+    }
     // Quit the application
     app.quit();
 });

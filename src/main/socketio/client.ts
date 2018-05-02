@@ -9,7 +9,7 @@ class SocketClient {
     constructor(ip: string, port: number) {
         // Create koa + socket.io instances
         console.log(ip);
-        const uri = `http://localhost:${port}`;
+        const uri = `http://${ip}:${port}`;
         this.io = IO.connect(uri, { reconnection: true });
         console.log("connecting to " + uri);
 

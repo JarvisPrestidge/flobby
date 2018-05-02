@@ -25,8 +25,12 @@ class SocketServer {
         // Init event handlers
         this.initEventHandlers();
 
+        this.app.use(async (ctx) => {
+            ctx.body = "Hello World";
+        });
+
         // Start server
-        this.app.listen(port, () => console.log(`listening on port ${port}`));
+        this.app.listen(port, "0.0.0.0", () => console.log(`listening on port ${port}`));
 
         enableDestroy(this.app);
     }
