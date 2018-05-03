@@ -7,7 +7,7 @@ import { app, ipcMain, IpcRenderer } from "electron";
 import { execAsyncBinaryAsAdmin } from "./utils/exec";
 import { generateLobbyCode, getIpFromLobbyCode, getPortFromLobbyCode } from "./utils/cypto";
 import { log } from "./utils/logging";
-// import { sleep } from "./utils/time";
+import { sleep } from "./utils/time";
 import { store } from "./utils/store";
 
 /**
@@ -30,19 +30,19 @@ ipcMain.on("create-lobby", async (event: IpcRendererEvent) => {
 
     const port = getPortFromLobbyCode(lobbyCode);
 
-    // while (!uPnP.isReady()) {
-    //     const support = uPnP.hasSupport();
-    //     if (support === false) {
-    //         return event.sender.send("peer-to-peer-unsupported");
-    //     }
-    //     await sleep(200);
-    // }
+    while (!uPnP.isReady()) {
+        const support = uPnP.hasSupport();
+        if (support === false) {
+            return event.sender.send("peer-to-peer-unsupported");
+        }
+        await sleep(200);
+    }
 
-    // const isSuccess = uPnP.forwardPort(port);
-    // if (!isSuccess) {
-    //     // TODO: Send IPC to renderer
-    //     throw new Error("Cannot issue port forwarding");
-    // }
+    const isSuccess = uPnP.forwardPort(port);
+    if (!isSuccess) {
+        // TODO: Send IPC to renderer
+        throw new Error("Cannot issue port forwarding");
+    }
 
     const socketServer = new SocketServer(port);
 

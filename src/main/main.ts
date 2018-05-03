@@ -1,7 +1,7 @@
 import * as path from "path";
 import * as url from "url";
 import C from "./constants";
-// import uPnP from "./nat/uPnP";
+import uPnP from "./nat/uPnP";
 import { app, BrowserWindow } from "electron";
 import "./utils/store";
 import "./events";
@@ -31,7 +31,7 @@ const createWindow = () => {
     mainWindow.webContents.openDevTools();
 
     // Start to attempt discovery of supported uPnP router
-    // uPnP.startDiscovery();
+    uPnP.startDiscovery();
 
     mainWindow.on("closed", () => {
         mainWindow = null as any;
