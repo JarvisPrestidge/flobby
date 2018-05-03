@@ -18,8 +18,8 @@ build
 # Marko compiled files
 **/*.marko.js
 
-# Generated CC
-**/*.css
+# Generated CSS
+src/renderer/css/*
 
 # Supporting binaries
 bin/*
