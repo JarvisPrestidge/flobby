@@ -5,7 +5,7 @@ import { getOpenPort, getPublicIPAddress } from "./network";
  *
  * @returns {Promise<string>}
  */
-export const getLobbyCode = async (): Promise<string> => {
+export const generateLobbyCode = async (): Promise<string> => {
 
     const port = await getOpenPort();
     const ip = await getPublicIPAddress();

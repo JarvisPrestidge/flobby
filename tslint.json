@@ -5,11 +5,6 @@
     ],
     "rules": {
         "no-console": false,
-        "no-var-requires": false,
-        "no-submodule-imports": false,
-        "object-literal-sort-keys": false,
         "ordered-imports": false,
-        "trailing-comma": false,
-        "member-ordering": false
     }
 }

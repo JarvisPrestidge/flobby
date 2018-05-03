@@ -1,54 +1,75 @@
-import { fork } from "child_process";
-import { join } from "path";
-import { forwardPort } from "./forwardPort";
 import { deletePort } from "./deletePort";
+import { forwardPort } from "./forwardPort";
+import { startDiscovery } from "./startDiscovery";
+import { store } from "../utils/store";
 
-class NATuPnP {
-
-    public static discover() {
-
-        const childProcessPath = join(__dirname, "discoverLocation.js")
-
-        const child = fork(childProcessPath);
-
-        // Send child process some work
-        child.send("discoverLocation");
-
-        // Event handler
-        child.on("message", (message: string) => {
-
-            if (message === "Failed") {
-                child.kill();
-                return (global as any).store.set("unsupported", true);
-            }
-
-            const location = message;
-
-            // Persist the location for future use
-            (global as any).store.set("location", location);
-        });
+/**
+ * Responsible for handling NAT hole punching
+ *
+ * @class UPNP
+ */
+class UPNP {
+    /**
+     * Return the upnp router location
+     *
+     * @private
+     * @static
+     * @returns {string}
+     */
+    private static getLocation(): string {
+        return store.get("upnp.location");
     }
 
-    private static getLocation() {
-        const location = (global as any).store.get("location");
-        return location;
+    /**
+     * Return the current state of readiness
+     *
+     * @static
+     * @returns {boolean}
+     */
+    public static isReady(): boolean {
+        return !!store.get("upnp.support");
     }
 
-    public static forwardPort(port: number) {
-        const location = this.getLocation();
-
-        if (location) {
-            return forwardPort(location, port);
-        }
+    /**
+     * Return the current state of readiness
+     *
+     * @static
+     * @returns {boolean | undefined}
+     */
+    public static hasSupport(): boolean | undefined {
+        return store.get("upnp.support");
     }
 
-    public static deletePort(port: number) {
-        const location = this.getLocation();
+    /**
+     * Begin the discovery of supported uPnP routers
+     *
+     * @static
+     */
+    public static startDiscovery(): void {
+        startDiscovery();
+    }
 
-        if (location) {
-            return deletePort(location, port);
-        }
+    /**
+     * Creates a port forward mapping
+     *
+     * @static
+     * @param {number} port
+     * @returns {boolean}
+     */
+    public static forwardPort(port: number): boolean {
+        return forwardPort(this.getLocation(), port);
+    }
+
+    /**
+     * Deletes a port mapping
+     *
+     * @static
+     * @param {number} port
+     * @returns {boolean}
+     */
+    public static deletePort(port: number): boolean {
+        return deletePort(this.getLocation(), port);
     }
 }
 
-export default NATuPnP;
+export default UPNP;

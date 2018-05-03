@@ -1,8 +1,9 @@
 import * as path from "path";
 import * as url from "url";
 import C from "./constants";
-import uPnP from "./nat/uPnP";
+// import uPnP from "./nat/uPnP";
 import { app, BrowserWindow } from "electron";
+import "./utils/store";
 import "./events";
 
 let mainWindow: Electron.BrowserWindow;
@@ -17,7 +18,7 @@ const createWindow = () => {
         autoHideMenuBar: true
     });
 
-    // and load the index.html of the app.
+    // Load the generated app index.html
     mainWindow.loadURL(
         url.format({
             pathname: path.join(C.STATIC_FILES, "index.html"),
@@ -30,9 +31,8 @@ const createWindow = () => {
     mainWindow.webContents.openDevTools();
 
     // Start to attempt discovery of supported uPnP router
-    uPnP.discover();
+    // uPnP.startDiscovery();
 
-    // Emitted when the window is closed.
     mainWindow.on("closed", () => {
         mainWindow = null as any;
     });

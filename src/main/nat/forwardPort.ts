@@ -1,4 +1,6 @@
-import { execSyncGoBinary } from "../utils/exec";
+import C from "../constants";
+import { execSyncBinary } from "../utils/exec";
+import { store } from "../utils/store";
 
 /**
  * Responsible for forwarding a port
@@ -11,20 +13,21 @@ export const forwardPort = (location: string, port: number): boolean => {
 
     const args = [`-location=${location}`, `-port=${port}`];
 
-    const result = execSyncGoBinary("forwardPort", ...args);
+    const result = execSyncBinary(C.GO_BINARIES, "forwardPort", ...args);
 
     const isPortSuccessfullyMapped = /Success/i.test(result);
 
     // Update list of actively mapped ports
-    let mappedPorts = (global as any).store.get("mappedPorts") as number[];
-    if (mappedPorts) {
-        mappedPorts.push(port);
-    } else {
-        mappedPorts = [port];
+    if (isPortSuccessfullyMapped) {
+        const ports: number[] = store.get("upnp.ports");
+        if (ports) {
+            const updatedPorts = ports.push(port);
+            store.set("upnp.ports", updatedPorts);
+        } else {
+            const updatedPorts = [port];
+            store.set("upnp.ports", updatedPorts);
+        }
     }
-
-    // Persist the port mapping
-    (global as any).store.set("mappedPorts", mappedPorts);
 
     return isPortSuccessfullyMapped;
 };

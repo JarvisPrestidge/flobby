@@ -1,4 +1,3 @@
-import C from "../constants";
 import { exec } from "child_process";
 import { execFileSync } from "child_process";
 import { join } from "path";
@@ -7,14 +6,14 @@ import { promisify } from "util";
 const asyncExec = promisify(exec);
 
 /**
- * Executes an AHK binary with admin privileges
+ * Executes a file with admin privileges
  *
  * @param {string} fileName
  * @returns {Promise<void>}
  */
-export const execAsAdminAHK = async (fileName: string): Promise<void> => {
+export const execAsyncBinaryAsAdmin = async (directory: string, fileName: string): Promise<void> => {
 
-    const binaryPath = join(C.AHK_BINARIES, `${fileName}.exe`);
+    const binaryPath = join(directory, `${fileName}.exe`);
 
     const powershellCmd = `powershell -command "Start-Process ${binaryPath} -Verb runAs"`;
 
@@ -26,14 +25,14 @@ export const execAsAdminAHK = async (fileName: string): Promise<void> => {
 };
 
 /**
- * Executes a Golang binary
+ * Executes a binary
  *
  * @param {string} fileName
  * @returns {string}
  */
-export const execSyncGoBinary = (fileName: string, ...args: string[]): string => {
+export const execSyncBinary = (directory: string, binary: string, ...args: string[]): string => {
 
-    const binaryPath = join(C.GO_BINARIES, `${fileName}.exe`);
+    const binaryPath = join(directory, `${binary}.exe`);
 
     console.log(binaryPath);
 

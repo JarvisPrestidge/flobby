@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+// Bulma
+
+@import "../../../node_modules/bulma/bulma";
+
+// Customization with bulma extensions/
+
+@import "../../../node_modules/bulma-extensions/bulma-badge/dist/bulma-badge.sass";
+@import "../../../node_modules/bulma-extensions/bulma-tooltip/dist/bulma-tooltip.sass";
+
+.badge[data-badge]::after {
+    top: 2px;
+    left: calc(100% - (-0.5rem));
+}

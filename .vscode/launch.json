@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "name": "Debug Electron main",
-            "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron",
+            "runtimeExecutable": "${workspaceFolder}/electron2bunyan.sh",
             "program": "${workspaceRoot}/src/main/main.ts",
             "preLaunchTask": "npm: debug",
             "stopOnEntry": true,
@@ -13,7 +13,8 @@
             "outFiles": [
                 "${workspaceRoot}/dist/**/*.js"
             ],
-            "protocol": "inspector"
+            "protocol": "inspector",
+            "outputCapture": "std",
         },
         {
             "type": "node",

@@ -1,14 +1,13 @@
 import * as Koa from "koa";
 const IO = require("koa-socket-2");
-const enableDestroy = require('server-destroy');
-
+const enableDestroy = require("server-destroy");
 
 interface ISocketContext {
-    event: any,
-    data: any,
-    socket: any,
-    acknowledge: any
-};
+    event: any;
+    data: any;
+    socket: any;
+    acknowledge: any;
+}
 
 class SocketServer {
     private app: Koa;
@@ -36,7 +35,6 @@ class SocketServer {
     }
 
     private initEventHandlers() {
-
         // Setup socket events here
         this.io.on("connection", (ctx: ISocketContext) => {
             ctx.socket.on("timesync", (data: any) => {
@@ -49,11 +47,7 @@ class SocketServer {
         });
     }
 
-    public getApp() {
-        return this.app;
-    }
-
-    public closeApp() {
+    public destroy() {
         (this.app as any).destroy();
     }
 }
