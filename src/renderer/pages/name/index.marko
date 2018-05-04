@@ -3,13 +3,24 @@ import { history } from "marko-path-router"
 class {
     onCreate() {
         this.state = {
-            name: null
+            name: null,
+            support: null
         };
     }
 
     onMount() {
         console.log("fired [name] onMount()");
         this.electron = window.require("electron");
+        this.initIpcListeners();
+    }
+
+    initIpcListeners() {
+        console.log("fired [home] initIpcListeners()");
+
+        this.electron.ipcRenderer.on("probe-upnp-support-response", (_, support) => {
+            this.state.support = support;
+            this.navigationHandler();
+        });
     }
 
     nextHandler(event, el) {
@@ -19,18 +30,24 @@ class {
         localStorage.setItem("name", name);
         // Persist name on file system
         this.electron.ipcRenderer.send("store-name", name);
-        // Navigate to home
-        history.replace("/home");
+        this.electron.ipcRenderer.send("probe-upnp-support");
+    }
+
+    navigationHandler() {
+        const support = this.state.support;
+        switch (true) {
+            case support === true: return history.replace("/home");
+            case support === false: return history.replace("/home");
+            default: return history.replace("/loading");
+        }
     }
 
     keyupHandler(event, el) {
         console.log("fired [name] keyupHandler()");
-        el.addEventListener("keyup", (event) => {
-            event.preventDefault();
-            if (event.keyCode === 13) {
-                this.nextHandler();
-            }
-        });
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            this.nextHandler();
+        }
     }
 }
 
@@ -49,6 +66,7 @@ div class="hero-body"
                         type="text"
                         placeholder="Enter name..."
                         key="m-name-input"
+                        autofocus
                         on-keyup("keyupHandler")
                     ]
 

@@ -16,10 +16,21 @@ process.on("message", async (message: string) => {
 const getSupportedRouterLocation = (): void => {
 
     let location;
-    const attempts = 0;
+    let attempt = 0;
+
     while (!location) {
+
+        // Send progress update to parent
+        attempt++;
+        if (process.send) {
+            process.send(attempt);
+        }
+
+        // Start a discovery cycle
         location = execSyncBinary(C.GO_BINARIES, "discoverLocation");
-        if (attempts > 10) {
+
+        // Fail permanently after 10 attempts
+        if (attempt > 10) {
             if (process.send) {
                 process.send("unsupported");
             }

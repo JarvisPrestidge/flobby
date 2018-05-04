@@ -1,6 +1,7 @@
 import { fork } from "child_process";
 import { join } from "path";
 import { store } from "../utils/store";
+import { ipcMain } from "electron";
 
 export const startDiscovery = (): void => {
 
@@ -13,11 +14,21 @@ export const startDiscovery = (): void => {
     child.send("start-discovery");
 
     // Event handler
-    child.on("message", (message: string) => {
+    child.on("message", (message: any) => {
 
-        // Handle failure
-        if (message === "unsupported") {
+        // Handle failure message
+        const hasFailedMessage = /^unsupported$/i.test(message);
+        if (hasFailedMessage) {
             store.set("upnp.support", false);
+            ipcMain.emit("upnp-unsupported");
+            return child.kill();
+        }
+
+        // Handle progress update message
+        const isAttemptMessage = /^\d$/i.test(message);
+        if (isAttemptMessage) {
+            const attempt = message;
+            ipcMain.emit("upnp-attempt-update", attempt);
             return child.kill();
         }
 
@@ -26,5 +37,6 @@ export const startDiscovery = (): void => {
         // Persist the location for future use
         store.set("upnp.support", true);
         store.set("upnp.location", location);
+        ipcMain.emit("upnp-supported");
     });
 };

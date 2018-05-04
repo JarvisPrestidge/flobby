@@ -2,6 +2,7 @@ import * as nameComponent from "../../pages/name"
 import * as homeComponent from "../../pages/home"
 import * as createComponent from "../../pages/create"
 import * as joinComponent from "../../pages/join"
+import * as loadingComponent from "../../pages/loading"
 import * as lobbyComponent from "../../pages/lobby"
 
 import { Router, history } from "marko-path-router"
@@ -19,6 +20,7 @@ class {
 
         const routes = [
             { path: '/', component: nameComponent },
+            { path: '/loading', component: loadingComponent },
             { path: '/home', component: homeComponent },
             { path: '/create', component: createComponent },
             { path: '/join', component: joinComponent },

@@ -3,30 +3,20 @@ import global from "./utils/global";
 import SocketClient from "./socketio/client";
 import SocketServer from "./socketio/server";
 import uPnP from "./nat/uPnP";
-import { app, ipcMain, IpcRenderer } from "electron";
+import { app } from "electron";
 import { execAsyncBinaryAsAdmin } from "./utils/exec";
 import { generateLobbyCode, getIpFromLobbyCode, getPortFromLobbyCode } from "./utils/cypto";
 import { log } from "./utils/logging";
 import { sleep } from "./utils/time";
 import { store } from "./utils/store";
-
-/**
- * Required to patch the shitty electron type definitions
- *
- * @interface IpcRendererEvent
- */
-interface IpcRendererEvent {
-    sender: IpcRenderer;
-}
+import { eventHandler } from "./infrastructure/eventHandler";
 
 
-ipcMain.on("create-lobby", async (event: IpcRendererEvent) => {
-
-    log.info("[ON-EVENT]: create-lobby");
+eventHandler("create-lobby", async (event) => {
 
     const lobbyCode = await generateLobbyCode();
 
-    log.info(lobbyCode, "lobbyCode");
+    log.info("lobbyCode: ", lobbyCode);
 
     const port = getPortFromLobbyCode(lobbyCode);
 
@@ -49,14 +39,9 @@ ipcMain.on("create-lobby", async (event: IpcRendererEvent) => {
     global.server = socketServer;
 
     event.sender.send("create-lobby-response", { lobbyCode });
-
-    log.info("[FIRED-EVENT]: create-lobby-response");
 });
 
-ipcMain.on("join-lobby", async (event: IpcRendererEvent, lobbyCode: string) => {
-
-    log.info("[ON-EVENT]: join-lobby");
-    log.info(lobbyCode, "lobbyCode");
+eventHandler<string>("join-lobby", async (event, lobbyCode) => {
 
     const ip = getIpFromLobbyCode(lobbyCode);
     const port = getPortFromLobbyCode(lobbyCode);
@@ -66,14 +51,9 @@ ipcMain.on("join-lobby", async (event: IpcRendererEvent, lobbyCode: string) => {
     global.client = socketClient;
 
     event.sender.send("join-lobby-response");
-
-    log.info("[FIRED-EVENT]: join-lobby-response");
 });
 
-ipcMain.on("execute-play", async (event: IpcRendererEvent, lobbyCode: string) => {
-
-    log.info("[ON-EVENT]: execute-play");
-    log.info(lobbyCode, "lobbyCode");
+eventHandler("execute-play", async (event) => {
 
     await execAsyncBinaryAsAdmin(C.AHK_BINARIES, "blockUserInput");
     await execAsyncBinaryAsAdmin(C.AHK_BINARIES, "bringToForeground");
@@ -85,26 +65,36 @@ ipcMain.on("execute-play", async (event: IpcRendererEvent, lobbyCode: string) =>
     await execAsyncBinaryAsAdmin(C.AHK_BINARIES, "executePlay");
 
     event.sender.send("execute-play-response");
-
-    log.info("[FIRED-EVENT]: execute-play-response");
 });
 
-ipcMain.on("store-name", async (_: IpcRendererEvent, name: string) => {
-
-    log.info("[ON-EVENT]: store-name");
+eventHandler<string>("store-name", async (_, name) => {
 
     // Persistently store user name
     store.set("user.name", name);
 });
 
-ipcMain.on("exit-app", async () => {
+eventHandler<string>("probe-upnp-support", async (event) => {
 
-    log.info("[ON-EVENT]: exit-app");
+    const support = uPnP.hasSupport();
+
+    event.sender.send("probe-upnp-support-response", support);
+});
+
+eventHandler<string>("exit-app", async () => {
+
+    if (global.server) {
+        global.server.destroy();
+    }
+    if (global.client) {
+        global.client.destroy();
+    }
 
     // Get actively mapped ports
-    const mappedPorts: number[] = store.get("upnp.ports");
+    const ports: number[] = store.get("upnp.ports");
     // Remove all port mappings
-    mappedPorts.map(uPnP.deletePort);
+    if (ports && ports.length) {
+        ports.map(uPnP.deletePort);
+    }
     // Quit the application
     app.quit();
 });

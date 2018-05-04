@@ -13,6 +13,7 @@ export interface IStoreSchema {
         support?: boolean;
         location?: string;
         ports?: number[];
+        attempt?: number;
     }
 }
 
@@ -24,7 +25,8 @@ const defaults: IStoreSchema = {
     upnp: {
         support: undefined,
         location: undefined,
-        ports: undefined
+        ports: undefined,
+        attempt: undefined
     }
 };
 

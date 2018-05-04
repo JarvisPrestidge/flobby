@@ -1,0 +1,47 @@
+import { history } from "marko-path-router"
+
+class {
+    onCreate() {
+        this.state = {
+            progress: 0,
+            support: null
+        };
+    }
+
+    onMount() {
+        console.log("fired [name] onMount()");
+        this.electron = window.require("electron");
+        this.initIpcListeners();
+    }
+
+    initIpcListeners() {
+        console.log("fired [home] initIpcListeners()");
+
+        this.electron.ipcRenderer.on("upnp-attempt-update", (_, attempt) => {
+            this.state.progress = attempt * 10;
+        });
+
+        this.electron.ipcRenderer.on("upnp-supported", () => {
+            this.state.support = true;
+            this.getEl("m-loading-text").textContent = "Found support!"
+            this.navigateToHome();
+        });
+
+        this.electron.ipcRenderer.on("upnp-unsupported", () => {
+            this.state.support = false;
+            // TODO: Show error modal with port forwarding / uPnP instructions
+        });
+    }
+
+    navigateToHome() {
+        console.log("fired [loadig] navigateToHome()");
+        // Navigate to home
+        history.replace("/home");
+    }
+
+}
+
+div class="pageloader is-active"
+    span class="title" key="m-loading-text" -- Scanning network for protocol support...
+    progress class="progress is-danger" value="${state.progress}" max="100"
+

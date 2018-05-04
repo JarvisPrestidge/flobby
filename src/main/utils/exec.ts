@@ -2,6 +2,7 @@ import { exec } from "child_process";
 import { execFileSync } from "child_process";
 import { join } from "path";
 import { promisify } from "util";
+import { log } from "./logging";
 
 const asyncExec = promisify(exec);
 
@@ -20,7 +21,7 @@ export const execAsyncBinaryAsAdmin = async (directory: string, fileName: string
     const { stderr } = await asyncExec(powershellCmd);
 
     if (stderr) {
-        console.error(stderr);
+        log.error(stderr);
     }
 };
 
@@ -33,8 +34,6 @@ export const execAsyncBinaryAsAdmin = async (directory: string, fileName: string
 export const execSyncBinary = (directory: string, binary: string, ...args: string[]): string => {
 
     const binaryPath = join(directory, `${binary}.exe`);
-
-    console.log(binaryPath);
 
     const result = execFileSync(binaryPath, args).toString();
 
