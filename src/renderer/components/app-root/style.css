@@ -2,12 +2,20 @@ html {
     overflow: hidden;
 }
 
-/* a,
+.level {
+    width: 100vw;
+}
+
+a,
 button {
     -webkit-app-region: no-drag;
 }
 
-.hero-head {
+#navbar {
     -webkit-app-region: drag;
 }
- */
+
+.hero-head,
+.hero-foot {
+    z-index: 999999;
+}

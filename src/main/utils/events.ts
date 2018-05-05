@@ -22,7 +22,7 @@ export const eventHandler = <T>(channel: string, listener: (event: IpcRendererEv
     ipcMain.on(channel, async (event: IpcRendererEvent, arg: T) => {
         log.info(`[IPC-CHANNEL-START]: ${channel}`);
 
-        arg ? log.info(`[IPC-INCOMING-ARGS]: ${arg}`) : log.info(`[IPC-INCOMING-ARGS]: none`);
+        arg ? log.info(`[IPC-ARGS]: ${arg}`) : log.info(`[IPC-INCOMING-ARGS]: none`);
 
         listener(event, arg);
 

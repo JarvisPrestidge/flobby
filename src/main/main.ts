@@ -2,10 +2,10 @@ import * as path from "path";
 import * as url from "url";
 import C from "./constants";
 import global from "./utils/global";
+import uPnP from "./nat/uPnP";
 import { app, BrowserWindow } from "electron";
-import "./events";
+import "./events/register";
 import "./utils/store";
-// import uPnP from "./nat/uPnP";
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -15,6 +15,8 @@ const createWindow = () => {
     mainWindow = new BrowserWindow({
         height: 600,
         width: 800,
+        minHeight: 600,
+        minWidth: 800,
         frame: false,
         autoHideMenuBar: true
     });
@@ -32,7 +34,7 @@ const createWindow = () => {
     // mainWindow.webContents.openDevTools();
 
     // Start to attempt discovery of supported uPnP router
-    // uPnP.startDiscovery();
+    uPnP.startDiscovery();
 
     mainWindow.on("closed", () => {
         mainWindow = null as any;

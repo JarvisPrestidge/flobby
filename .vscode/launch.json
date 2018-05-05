@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "windows": {
-                "runtimeExecutable": "${workspaceFolder}/scripts/electron2bunyan.bat"
+                "runtimeExecutable": "${workspaceFolder}\\scripts\\electron2bunyan.bat"
             },
             "linux": {
                 "runtimeExecutable": "${workspaceFolder}/scripts/electron2bunyan.sh"

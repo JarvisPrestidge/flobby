@@ -1,5 +1,12 @@
 @charset "utf-8";
 
+// Disable the responsive breakpoints
+
+$tablet: 800px;
+$desktop: false;
+$widescreen: false;
+$fullhd: false;
+
 // Bulma
 
 @import "../../../node_modules/bulma/bulma";

@@ -25,18 +25,22 @@ class {
 
 section class="hero is-dark is-fullheight"
 
-    // Head
     div class="hero-head"
         div class="container"
-            nav class="navbar"
-                div class="navbar-brand"
-                    a class="navbar-item" on-click("reset")
-                        span class="icon"
-                            -- <i class="fas fa-undo-alt"/>
+            nav id="navbar" class="level"
 
-                    a class="navbar-item" on-click("exit") style="float: right"
-                        span class="icon"
-                            -- <i class="fas fa-times"/>
+                // Left side
+                div class="level-left"
+                    div class="level-item"
+                        a class="navbar-item" on-click("reset")
+                            span class="icon"
+                                -- <i class="fas fa-undo-alt"/>
+                // Right side
+                div class="level-right"
+                    div class="level-item"
+                        a class="navbar-item" on-click("exit")
+                            span class="icon"
+                                -- <i class="fas fa-times"/>
 
     // Application mount point
     app-router key="m-app-router"
@@ -66,4 +70,3 @@ section class="hero is-dark is-fullheight"
                             span class="icon"
                                 -- <i class="fas fa-bug"/>
                             span -- Issues
-

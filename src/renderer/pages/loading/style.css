@@ -1,0 +1,20 @@
+.pageloader {
+    background: none;
+}
+
+.progress {
+    position: absolute;
+    top: 45vh;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 4em;
+    width: 80vw;
+}
+
+.pageloader .title {
+    top: 45vh;
+}
+
+.pageloader::after {
+    top: 45vh;
+}
