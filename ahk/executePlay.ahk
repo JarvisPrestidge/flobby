@@ -1,4 +1,0 @@
-#NoTrayIcon
-#SingleInstance force
-
-Click

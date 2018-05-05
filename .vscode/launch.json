@@ -5,10 +5,10 @@
             "type": "node",
             "request": "launch",
             "windows": {
-                "runtimeExecutable": "${workspaceFolder}/electron2bunyan.bat"
+                "runtimeExecutable": "${workspaceFolder}/scripts/electron2bunyan.bat"
             },
             "linux": {
-                "runtimeExecutable": "${workspaceFolder}/electron2bunyan.sh"
+                "runtimeExecutable": "${workspaceFolder}/scripts/electron2bunyan.sh"
             },
             "name": "Debug Electron main",
             "preLaunchTask": "npm: debug",
