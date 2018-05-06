@@ -4,7 +4,6 @@ import uPnP from "../../nat/uPnP";
 import { eventHandler } from "../../utils/events";
 import { generateLobbyCode, getPortFromLobbyCode } from "../../utils/cypto";
 import { log } from "../../utils/logging";
-import { sleep } from "../../utils/time";
 
 /**
  * Responsible for handling the creation of a new lobby
@@ -18,14 +17,6 @@ eventHandler("create-lobby", async (event) => {
     log.info("lobbyCode: ", lobbyCode);
 
     const port = getPortFromLobbyCode(lobbyCode);
-
-    while (!uPnP.isReady()) {
-        const support = uPnP.hasSupport();
-        if (support === false) {
-            return event.sender.send("peer-to-peer-unsupported");
-        }
-        await sleep(200);
-    }
 
     const isSuccess = uPnP.forwardPort(port);
     if (!isSuccess) {

@@ -1,6 +1,7 @@
 import C from "../constants";
 import { execSyncBinary } from "../utils/exec";
 import { store } from "../utils/store";
+import { log } from "../utils/logging";
 
 /**
  * Responsible for forwarding a port
@@ -26,6 +27,10 @@ export const deletePort = (location: string, port: number): boolean => {
         if (ports) {
             const updatedPorts = ports.filter((p) => p !== port);
             store.set("upnp.ports", updatedPorts);
+        } else {
+            const errorMessage = "upnp.ports default value was not set";
+            log.error(errorMessage);
+            throw new Error(errorMessage);
         }
     }
 

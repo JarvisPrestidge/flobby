@@ -21,9 +21,6 @@ build
 # Generated CSS
 src/renderer/css/*
 
-# Supporting binaries
-bin/*
-
 # Private secrets
 config/*.ts
 

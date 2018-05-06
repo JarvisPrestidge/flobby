@@ -1,7 +1,7 @@
 import { fork } from "child_process";
 import { join } from "path";
 import { store } from "../utils/store";
-import { ipcMain } from "electron";
+import global from "../utils/global"
 
 export const startDiscovery = (): void => {
 
@@ -16,11 +16,14 @@ export const startDiscovery = (): void => {
     // Event handler
     child.on("message", (message: any) => {
 
+        const rendererWebContents = global.mainWindow.webContents;
+
         // Handle failure message
         const hasFailedMessage = /^unsupported$/i.test(message);
         if (hasFailedMessage) {
             store.set("upnp.support", false);
-            ipcMain.emit("upnp-unsupported");
+            rendererWebContents.send("upnp-not-supported");
+            rendererWebContents.send("set-local-storage", "upnp.support", false);
             return child.kill();
         }
 
@@ -28,8 +31,8 @@ export const startDiscovery = (): void => {
         const isAttemptMessage = /^\d$/i.test(message);
         if (isAttemptMessage) {
             const attempt = message;
-            ipcMain.emit("upnp-attempt-update", attempt);
-            return child.kill();
+            rendererWebContents.send("upnp-attempt-update", attempt);
+            return;
         }
 
         const location = message;
@@ -37,6 +40,7 @@ export const startDiscovery = (): void => {
         // Persist the location for future use
         store.set("upnp.support", true);
         store.set("upnp.location", location);
-        ipcMain.emit("upnp-supported");
+        rendererWebContents.send("upnp-supported");
+        rendererWebContents.send("set-local-storage", "upnp.support", true);
     });
 };

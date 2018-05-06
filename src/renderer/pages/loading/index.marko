@@ -18,30 +18,29 @@ class {
         console.log("fired [home] initIpcListeners()");
 
         this.electron.ipcRenderer.on("upnp-attempt-update", (_, attempt) => {
+            console.log(`[upnp-attempt-update]: ${attempt}`);
             this.state.progress = attempt * 10;
         });
 
         this.electron.ipcRenderer.on("upnp-supported", () => {
+            console.log(`[upnp-supported]`);
+            this.getEl("m-loading-text").textContent = "Confirmed Support!"
             this.state.support = true;
-            this.getEl("m-loading-text").textContent = "Found support!"
-            this.navigateToHome();
+            localStorage.setItem("upnp.support", true);
+            setTimeout(() => history.replace("/home"), 1000);
         });
 
-        this.electron.ipcRenderer.on("upnp-unsupported", () => {
+        this.electron.ipcRenderer.on("upnp-not-supported", () => {
+            console.log(`[upnp-not-supported]`);
+            this.getEl("m-loading-text").textContent = "No Network Support..."
             this.state.support = false;
-            // TODO: Show error modal with port forwarding / uPnP instructions
+            localStorage.setItem("upnp.support", false);
+            setTimeout(() => history.replace("/no-support"), 1000);
         });
     }
-
-    navigateToHome() {
-        console.log("fired [loadig] navigateToHome()");
-        // Navigate to home
-        history.replace("/home");
-    }
-
 }
 
 div class="pageloader is-active"
     span class="title" key="m-loading-text" -- Scanning network for protocol support...
-    progress class="progress is-danger" value="${state.progress}" max="100"
-
+    if(state.support === null)
+        progress class="progress is-danger" value="${state.progress}" max="100"

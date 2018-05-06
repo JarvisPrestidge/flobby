@@ -25,8 +25,7 @@ const defaults: IStoreSchema = {
     upnp: {
         support: undefined,
         location: undefined,
-        ports: undefined,
-        attempt: undefined
+        ports: []
     }
 };
 

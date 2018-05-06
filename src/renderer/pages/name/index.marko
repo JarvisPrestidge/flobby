@@ -1,50 +1,27 @@
 import { history } from "marko-path-router"
 
 class {
-    onCreate() {
-        this.state = {
-            name: null,
-            support: null
-        };
-    }
-
     onMount() {
         console.log("fired [name] onMount()");
         this.electron = window.require("electron");
-        this.initIpcListeners();
-    }
-
-    initIpcListeners() {
-        console.log("fired [home] initIpcListeners()");
-
-        this.electron.ipcRenderer.on("probe-upnp-support-response", (_, support) => {
-            this.state.support = support;
-            this.navigationHandler();
-        });
     }
 
     nextHandler(event, el) {
         console.log("fired [name] next()");
         const name = this.getEl("m-name-input").value;
         // Persist name for current session
-        localStorage.setItem("name", name);
+        localStorage.setItem("user.name", name);
         // Persist name on file system
-        this.electron.ipcRenderer.send("store-name", name);
-        this.electron.ipcRenderer.send("probe-upnp-support");
-    }
-
-    navigationHandler() {
-        const support = this.state.support;
-        switch (true) {
-            case support === true: return history.replace("/home");
-            case support === false: return history.replace("/home");
-            default: return history.replace("/loading");
-        }
+        this.electron.ipcRenderer.send("set-name", name);
+        // Navigate home
+        history.replace("/home");
     }
 
     keyupHandler(event, el) {
         console.log("fired [name] keyupHandler()");
+        // Remove event
         event.preventDefault();
+        // On <enter> press call nextHandler()
         if (event.keyCode === 13) {
             this.nextHandler();
         }

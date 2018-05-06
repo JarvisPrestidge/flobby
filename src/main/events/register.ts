@@ -4,7 +4,9 @@
 
 import "./handlers/createLobby"
 import "./handlers/joinLobby"
-import "./handlers/storeName"
+import "./handlers/getName"
+import "./handlers/setName"
 import "./handlers/upnpSupport"
 import "./handlers/startGame"
 import "./handlers/exitApp"
+import "./handlers/resetApp"

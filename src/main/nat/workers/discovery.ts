@@ -7,13 +7,13 @@ process.on("message", async (message: string) => {
         throw new Error("Unknown inter-process request recieved");
     }
 
-    getSupportedRouterLocation();
+    await getSupportedRouterLocation();
 });
 
 /**
  * Long running blocking attempt at retrieving uPnP supported router location
  */
-const getSupportedRouterLocation = (): void => {
+const getSupportedRouterLocation = async (): Promise<void> => {
 
     let location;
     let attempt = 0;

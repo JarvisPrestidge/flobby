@@ -4,14 +4,30 @@
         {
             "type": "node",
             "request": "launch",
+            "name": "Debug Electron main",
+            "preLaunchTask": "npm: debug",
             "windows": {
                 "runtimeExecutable": "${workspaceFolder}\\scripts\\electron2bunyan.bat"
             },
             "linux": {
                 "runtimeExecutable": "${workspaceFolder}/scripts/electron2bunyan.sh"
             },
-            "name": "Debug Electron main",
-            "preLaunchTask": "npm: debug",
+            "program": "${workspaceRoot}/src/main/main.ts",
+            "outFiles": ["${workspaceRoot}/dist/**/*.js"],
+            "sourceMaps": true,
+            "protocol": "inspector",
+            "outputCapture": "std"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Electron main - NO BUILD",
+            "windows": {
+                "runtimeExecutable": "${workspaceFolder}\\scripts\\electron2bunyan.bat"
+            },
+            "linux": {
+                "runtimeExecutable": "${workspaceFolder}/scripts/electron2bunyan.sh"
+            },
             "program": "${workspaceRoot}/src/main/main.ts",
             "outFiles": ["${workspaceRoot}/dist/**/*.js"],
             "sourceMaps": true,

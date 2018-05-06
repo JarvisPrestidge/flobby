@@ -21,6 +21,9 @@ const createWindow = () => {
         autoHideMenuBar: true
     });
 
+    // Clear existing local storage
+    mainWindow.webContents.session.clearStorageData();
+
     // Load the generated app index.html
     mainWindow.loadURL(
         url.format({
@@ -31,7 +34,7 @@ const createWindow = () => {
     );
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // Start to attempt discovery of supported uPnP router
     uPnP.startDiscovery();
@@ -43,7 +46,7 @@ const createWindow = () => {
 
 app.on("ready", () => {
     createWindow();
-    global.app = app;
+    global.mainWindow = mainWindow;
 });
 
 app.on("activate", () => {

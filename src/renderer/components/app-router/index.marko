@@ -4,32 +4,35 @@ import * as createComponent from "../../pages/create"
 import * as joinComponent from "../../pages/join"
 import * as loadingComponent from "../../pages/loading"
 import * as lobbyComponent from "../../pages/lobby"
-
 import { Router, history } from "marko-path-router"
 
 class {
+
     onCreate() {
         this.state = {
-            currentRoute: "/"
+            currentRoute: null
         };
     }
 
     onMount() {
-        const self = this;
-        const state = self.state;
+        // Bind electron instance to component
+        this.electron = window.require("electron");
+
+        // Bring main process persistent storage to browser
+        this.initLocalStorageState();
 
         const routes = [
-            { path: '/', component: nameComponent },
-            { path: '/loading', component: loadingComponent },
-            { path: '/home', component: homeComponent },
-            { path: '/create', component: createComponent },
-            { path: '/join', component: joinComponent },
-            { path: '/lobby', component: lobbyComponent }
+            { path: "/name", component: nameComponent },
+            { path: "/loading", component: loadingComponent },
+            { path: "/home", component: homeComponent },
+            { path: "/create", component: createComponent },
+            { path: "/join", component: joinComponent },
+            { path: "/lobby", component: lobbyComponent }
         ];
 
         const render = Router.renderSync({
             routes: routes,
-            initialRoute: state.currentRoute
+            initialRoute: this.initialRoute()
         });
 
         const router = this.router = render
@@ -37,6 +40,18 @@ class {
             .getComponent()
 
         router.beforeEach((from, to, next) => {
+            const name = localStorage.getItem("user.name");
+            if (!name) {
+                history.replace("/name");
+                console.log("BeforeEach hook. User name still pending");
+                return next();
+            }
+            const support = localStorage.getItem("upnp.support");
+            if (!support) {
+                history.replace("/loading");
+                console.log("BeforeEach hook. UPnP support still pending");
+                return next();
+            }
             console.log(`BeforeEach hook. Transitioning from ${from} to ${to}`);
             next();
         });
@@ -45,21 +60,45 @@ class {
             console.log(`AfterEach hook. Transitioning from ${from} to ${to}`)
         });
 
-        state.currentRoute = router.currentRoute;
-
-        router.on('update', () => {
-            state.currentRoute = router.currentRoute
-            console.log(state.currentRoute);
-            console.log(router.currentRoute);
+        router.on("update", () => {
+            this.state.currentRoute = router.currentRoute
         });
     }
 
-    navigateToPage(route) {
-        // replace current route
-        history.replace(`/${route}`);
+    initialRoute() {
+        const name = localStorage.getItem("user.name");
+        const support = localStorage.getItem("upnp.support");
+        switch (true) {
+            case !name: return "/name";
+            case !support: return "/loading";
+            default: return "/home";
+        }
+    }
+
+    initLocalStorageState() {
+        this.hasUserName();
+        this.hasUPnPSupport();
+    }
+
+    hasUserName() {
+        const name = this.electron.ipcRenderer.sendSync("get-name-sync");
+        console.log(`name: ${name}`);
+        if (name) {
+            localStorage.setItem("user.name", name);
+            return true;
+        }
+        return false;
+    }
+
+    hasUPnPSupport() {
+        const support = this.electron.ipcRenderer.sendSync("get-upnp-support-sync");
+        console.log(`network support: ${support}`);
+        if (support) {
+            localStorage.setItem("upnp.support", support);
+            return true;
+        }
+        return false;
     }
 }
-
-$ var currentRoute = state.currentRoute
 
 div id="router" key="m-router" no-update

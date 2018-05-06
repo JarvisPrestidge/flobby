@@ -1,4 +1,5 @@
 import * as Koa from "koa";
+import { Server } from "http";
 const IO = require("koa-socket-2");
 const enableDestroy = require("server-destroy");
 
@@ -8,10 +9,16 @@ interface ISocketContext {
     socket: any;
     acknowledge: any;
 }
-
+/**
+ * Single instance of a socket.io server
+ *
+ * @class SocketServer
+ */
 class SocketServer {
+
     private app: Koa;
     private io: any;
+    private server: Server;
 
     constructor(port: number) {
         // Create koa + socket.io instances
@@ -29,9 +36,9 @@ class SocketServer {
         });
 
         // Start server
-        this.app.listen(port, "0.0.0.0", () => console.log(`listening on port ${port}`));
+        this.server = this.app.listen(port, "0.0.0.0", () => console.log(`listening on port ${port}`));
 
-        enableDestroy(this.app);
+        enableDestroy(this.server);
     }
 
     private initEventHandlers() {
@@ -48,7 +55,7 @@ class SocketServer {
     }
 
     public destroy() {
-        (this.app as any).destroy();
+        this.server.destroy();
     }
 }
 

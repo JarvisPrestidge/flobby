@@ -8,6 +8,7 @@ import { log } from "../utils/logging";
  */
 interface IpcRendererEvent {
     sender: IpcRenderer;
+    returnValue: any;
 }
 
 /**

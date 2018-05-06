@@ -1,18 +1,29 @@
+import { history } from "marko-path-router";
+
 class {
     onMount() {
         console.log("fired app-root:onMount()");
         this.electron = window.require("electron");
+        this.initIpcListeners();
+    }
+
+    initIpcListeners() {
+        console.log("fired [home] initIpcListeners()");
+
+        this.electron.ipcRenderer.on("set-local-storage", (_, key, value) => {
+            console.log(`[set-local-storage]: key:${key} - value: ${value}`);
+            localStorage.setItem(key, value);
+        });
     }
 
     reset() {
         console.log("fired resetState()");
-        this.getComponent("m-app-router").navigateToPage("home");
-        // TODO: Reset any global state here
+        this.electron.ipcRenderer.send("reset-app");
+        history.replace("/home");
     }
 
     exit() {
         console.log("fired resetState()");
-        // TODO: Reset any global state here
         this.electron.ipcRenderer.send("exit-app");
     }
 

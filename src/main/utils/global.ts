@@ -1,6 +1,6 @@
 import SocketClient from "../socketio/client";
 import SocketServer from "../socketio/server";
-import { App } from "electron";
+import { BrowserWindow } from "electron";
 
 /**
  * Extend the NodeJS Global interface
@@ -9,7 +9,7 @@ import { App } from "electron";
  * @extends {NodeJS.Global}
  */
 interface IGlobal extends NodeJS.Global {
-    app: App
+    mainWindow: BrowserWindow,
     client: SocketClient,
     server: SocketServer,
 }

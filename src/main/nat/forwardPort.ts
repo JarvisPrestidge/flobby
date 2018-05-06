@@ -1,6 +1,7 @@
 import C from "../constants";
 import { execSyncBinary } from "../utils/exec";
 import { store } from "../utils/store";
+import { log } from "../utils/logging";
 
 /**
  * Responsible for forwarding a port
@@ -21,11 +22,12 @@ export const forwardPort = (location: string, port: number): boolean => {
     if (isPortSuccessfullyMapped) {
         const ports: number[] = store.get("upnp.ports");
         if (ports) {
-            const updatedPorts = ports.push(port);
-            store.set("upnp.ports", updatedPorts);
+            ports.push(port);
+            store.set("upnp.ports", ports);
         } else {
-            const updatedPorts = [port];
-            store.set("upnp.ports", updatedPorts);
+            const errorMessage = "upnp.ports default value was not set";
+            log.error(errorMessage);
+            throw new Error(errorMessage);
         }
     }
 
