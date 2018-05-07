@@ -18,14 +18,14 @@ interface IpcRendererEvent {
  * @param {string} channel
  * @param {(event: IpcRendererEvent, arg: T) => Promise<void>} listener
  */
-export const eventHandler = <T>(channel: string, listener: (event: IpcRendererEvent, arg: T) => Promise<void>) => {
+export const eventHandler = <T>(channel: string, listener: (event: IpcRendererEvent, ...args: T[]) => Promise<void>) => {
 
-    ipcMain.on(channel, async (event: IpcRendererEvent, arg: T) => {
+    ipcMain.on(channel, async (event: IpcRendererEvent, ...args: T[]) => {
         log.info(`[IPC-CHANNEL-START]: ${channel}`);
 
-        arg ? log.info(`[IPC-ARGS]: ${arg}`) : log.info(`[IPC-INCOMING-ARGS]: none`);
+        args ? log.info(`[IPC-ARGS]: ${args}`) : log.info(`[IPC-INCOMING-ARGS]: none`);
 
-        listener(event, arg);
+        listener(event, ...args);
 
         log.info(`[IPC-CHANNEL-END]: ${channel}`);
     });

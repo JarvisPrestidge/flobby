@@ -9,11 +9,15 @@ class {
 
     onMount() {
         console.log("fired [create] onMount()");
+        this.electron = window.require("electron");
         const lobbyCode = localStorage.getItem("lobbyCode");
         this.state.lobbyCode = lobbyCode;
     }
 
     joinLobby() {
+        // Create local socket server
+        const isLocal = true;
+        this.electron.ipcRenderer.send("join-lobby", this.state.lobbyCode, isLocal);
         // Navigate to create page
         history.replace("/lobby");
     }

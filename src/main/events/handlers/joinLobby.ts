@@ -8,14 +8,18 @@ import { getIpFromLobbyCode, getPortFromLobbyCode } from "../../utils/cypto";
  *
  * @returns {void}
  */
-eventHandler<string>("join-lobby", async (event, lobbyCode) => {
+eventHandler<string>("join-lobby", async (_, lobbyCode, isLocal) => {
 
-    const ip = getIpFromLobbyCode(lobbyCode);
+    let ip: string;
+    if (isLocal) {
+        ip = "localhost";
+    } else {
+        ip = getIpFromLobbyCode(lobbyCode);
+    }
+
     const port = getPortFromLobbyCode(lobbyCode);
 
     const socketClient = new SocketClient(ip, port);
 
     global.client = socketClient;
-
-    event.sender.send("join-lobby-response");
 });

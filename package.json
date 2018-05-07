@@ -1,6 +1,6 @@
 {
-    "name": "electro",
-    "version": "1.0.0",
+    "name": "flobby",
+    "version": "1.0.1",
     "description": "An electron template leveraging typescript, marko, lasso and bulma",
     "main": "dist/main/main.js",
     "scripts": {
@@ -17,7 +17,7 @@
         "dist": "npm run lasso && cross-env DEBUG=electron-builder build"
     },
     "build": {
-        "appId": "flobby",
+        "appId": "Flobby",
         "directories": {
             "output": "out"
         },
@@ -45,6 +45,7 @@
         "koa-socket-2": "^1.0.17",
         "marko": "^4.4.28",
         "marko-path-router": "^0.7.3",
+        "moment": "^2.22.1",
         "nat-puncher": "^0.1.2",
         "openport": "^0.0.5",
         "public-ip": "^2.4.0",
@@ -52,7 +53,8 @@
         "socket.io": "^2.1.0",
         "socket.io-client": "^2.1.0",
         "sudo-prompt": "^8.2.0",
-        "timesync": "^1.0.2"
+        "timesync": "^1.0.2",
+        "uuid": "^3.2.1"
     },
     "devDependencies": {
         "@lasso/marko-taglib": "^1.0.10",
@@ -65,6 +67,7 @@
         "@types/shelljs": "^0.7.9",
         "@types/socket.io": "^1.4.33",
         "@types/socket.io-client": "^1.4.32",
+        "@types/uuid": "^3.4.3",
         "browserfs": "^1.4.3",
         "bulma": "^0.7.1",
         "bulma-extensions": "^1.0.14",

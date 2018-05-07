@@ -1,24 +1,84 @@
+import * as moment from "moment";
+
 class {
 
     onCreate() {
         this.state = {
-            name: null,
-            phase: "waiting for players to ready up..."
+            ready: false,
+            allReady: false,
+            clients: [],
+            phase: "waiting for players to ready up...",
+            time: null,
+            offset: null
         };
     }
 
     onMount() {
         console.log("fired onMount");
-        this.getName();
+        this.electron = window.require("electron");
+        this.initIpcListeners();
     }
 
-    getName() {
-        const name = localStorage.getItem("name");
-        this.state.name = name;
+    initIpcListeners() {
+        console.log("[lobby]: initIpcListeners()");
+        this.onStateChange();
+        this.onLobbyReady();
+        this.onTimeSyncUpdate();
+        this.onTimeSyncOffsetUpdate();
+    }
+
+    onStateChange() {
+        this.electron.ipcRenderer.on("client-state-change", (_, clients, isLobbyReady) => {
+            console.log("[ON-IPC-EVENT]: client-state-change", clients, isLobbyReady);
+            this.state.clients = clients;
+            this.setStateDirty("clients");
+        });
+    }
+
+    onLobbyReady() {
+        this.electron.ipcRenderer.on("lobby-is-ready", () => {
+            console.log("[ON-IPC-EVENT]: lobby-is-ready");
+            this.state.allReady = true;
+            this.state.phase = "all players ready...";
+            setTimeout(() => this.state.phase = "starting time sychronization...", 1000);
+        });
+    }
+
+    onTimeSyncUpdate() {
+        this.electron.ipcRenderer.on("time-sync-update", (_, time) => {
+            console.log("[ON-IPC-EVENT]: time-sync-update", time);
+            this.state.time = time;
+        });
+    }
+
+    onStopTimeSync() {
+        this.electron.ipcRenderer.on("game-starting", (_, time) => {
+            console.log("[ON-IPC-EVENT]: game-starting", time);
+            this.state.phase = "starting game...";
+        });
+    }
+
+    onTimeSyncOffsetUpdate() {
+        this.electron.ipcRenderer.on("time-sync-offset-update", (_, offset) => {
+            console.log("[ON-IPC-EVENT]: time-sync-offset-update", offset);
+            this.state.offset = offset;
+        });
     }
 
     ready() {
-        this.getComponent("m-user").ready();
+        console.log("[lobby]: player-ready()");
+        this.state.ready = true;
+        this.electron.ipcRenderer.send("player-ready");
+    }
+
+    unready() {
+        console.log("[lobby]: player-unready()");
+        this.state.ready = false;
+        this.electron.ipcRenderer.send("player-unready");
+    }
+
+    formatDate(epoch) {
+        return moment(epoch).format("hh:mm:ss.SSS");
     }
 }
 
@@ -30,21 +90,27 @@ div class="hero-body"
         // Ready up
         section id="ready-up" class="section has-text-centered"
 
-            a class="button is-success is-large" on-click("ready") -- READY UP
+            if(!state.ready)
+                a class="button is-success is-large" on-click("ready") -- READY UP
+            else
+                if(state.allReady)
+                    a class="button is-danger is-large" disabled on-click("unready") -- UN-READY
+                else
+                    a class="button is-danger is-large" on-click("unready") -- UN-READY
 
         // Players
         section id="player-list" class="section has-text-centered"
 
             div class="columns is-multiline"
 
-                lobby-player key="m-user" title="${state.name}"
+                for(client in state.clients)
+                    lobby-player key="${client.id}" name=client.name ready=client.ready
 
-                lobby-player title="player 1"
-                lobby-player title="player 2"
-                lobby-player title="player 3"
-                lobby-player title="player 4"
 
         // Info
         section id="phase-info" class="section has-text-centered"
 
             h2 class="subtitle" -- ${state.phase}
+
+            if(state.allReady)
+                h2 class="subtitle" -- time: ${component.formatDate(state.time)} / offset: ${state.offset}

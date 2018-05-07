@@ -10,7 +10,14 @@ import { store } from "../../utils/store";
  * @returns {void}
  */
 eventHandler<string>("exit-app", async () => {
+    exitApp();
+});
 
+/**
+ * Handles exiting the app gracefully
+ *
+ */
+export const exitApp = () => {
     if (global.server) {
         global.server.destroy();
     }
@@ -26,4 +33,4 @@ eventHandler<string>("exit-app", async () => {
     }
     // Quit the application
     app.quit();
-});
+};

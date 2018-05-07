@@ -10,7 +10,8 @@ class {
 
     onCreate() {
         this.state = {
-            currentRoute: null
+            currentRoute: null,
+            previousRoute: null
         };
     }
 
@@ -31,6 +32,9 @@ class {
         ];
 
         const render = Router.renderSync({
+             injectedInput: {
+                state: this.state
+            },
             routes: routes,
             initialRoute: this.initialRoute()
         });
@@ -61,7 +65,8 @@ class {
         });
 
         router.on("update", () => {
-            this.state.currentRoute = router.currentRoute
+            this.state.previousRoute = this.state.currentRoute;
+            this.state.currentRoute = router.currentRoute;
         });
     }
 

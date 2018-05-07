@@ -39,7 +39,3 @@
     overflow-y: auto;
     height: calc(70vh - 87px);
 }
-
-#phase-info {
-    height: calc(10vh - 87px);
-}

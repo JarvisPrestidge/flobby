@@ -34,7 +34,7 @@ const createWindow = () => {
     );
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     // Start to attempt discovery of supported uPnP router
     uPnP.startDiscovery();

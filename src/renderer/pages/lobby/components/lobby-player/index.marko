@@ -7,12 +7,18 @@ class {
     }
 
     onMount() {
-        console.log("fired onMount");
+        console.log("[lobby-player]: onMount()");
         this.electron = window.require("electron");
     }
 
     ready() {
+        console.log("[lobby-player]: ready()");
         this.state.isReady = true;
+    }
+
+    unready() {
+        console.log("[lobby-player]: unready()");
+        this.state.isReady = false;
     }
 }
 
@@ -24,11 +30,11 @@ div class="column is-half"
 
             // Player name
             div class="column is-three-quarters is-narrow"
-                h1 class="title has-text-left" -- ${input.title}
+                h1 class="title has-text-left" -- ${input.name}
 
             // Ready status
             div class="column is-one-quarter is-narrow"
-                if(state.isReady)
+                if(input.ready)
                     a class="button is-success" style="float: right;" -- Ready
                 else
                     a class="button is-danger is-loading" style="float: right;" -- Ready
