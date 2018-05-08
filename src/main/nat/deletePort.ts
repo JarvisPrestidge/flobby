@@ -12,6 +12,8 @@ import { log } from "../utils/logging";
  */
 export const deletePort = (location: string, port: number): boolean => {
 
+    log.info(`[FORWARD-DELETE]: attempting to delete port ${port}`);
+
     const args = [
         `-location=${location}`,
         `-port=${port}`
@@ -20,6 +22,8 @@ export const deletePort = (location: string, port: number): boolean => {
     const result = execSyncBinary(C.GO_BINARIES, "deletePort", ...args);
 
     const isPortSuccessfullyRemoved = /Success/i.test(result);
+
+    log.info(`[FORWARD-DELETE-RESULT]: ${isPortSuccessfullyRemoved}`);
 
     // Update list of actively mapped ports
     if (isPortSuccessfullyRemoved) {

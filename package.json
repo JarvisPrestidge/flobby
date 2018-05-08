@@ -14,7 +14,7 @@
         "debug": "cross-env NODE_ENV=development npm run lasso",
         "dev": "cross-env NODE_ENV=development npm run lasso && npm run start",
         "prod": "cross-env NODE_ENV=production npm run lasso && npm run start",
-        "dist": "npm run lasso && cross-env DEBUG=electron-builder build"
+        "dist": "cross-env NODE_ENV=production npm run lasso && cross-env DEBUG=electron-builder build"
     },
     "build": {
         "appId": "Flobby",
@@ -24,7 +24,14 @@
         "extends": null,
         "win": {
             "target": "nsis"
-        }
+        },
+        "extraFiles": [
+            {
+                "from": "bin",
+                "to": "resources/bin",
+                "filter": ["**/*"]
+            }
+        ]
     },
     "keywords": [
         "typescript",

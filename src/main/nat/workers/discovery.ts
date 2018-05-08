@@ -1,5 +1,6 @@
 import C from "../../constants";
 import { execSyncBinary } from "../../utils/exec";
+import { log } from "../../utils/logging";
 
 process.on("message", async (message: string) => {
 
@@ -22,6 +23,7 @@ const getSupportedRouterLocation = async (): Promise<void> => {
 
         // Send progress update to parent
         attempt++;
+        log.info(`[DISCOVERY-WORKER]: attempt ${attempt}`);
         if (process.send) {
             process.send(attempt);
         }
@@ -31,6 +33,7 @@ const getSupportedRouterLocation = async (): Promise<void> => {
 
         // Fail permanently after 10 attempts
         if (attempt > 10) {
+            log.info(`[DISCOVERY-WORKER-FAILED]`);
             if (process.send) {
                 process.send("unsupported");
             }
@@ -41,6 +44,7 @@ const getSupportedRouterLocation = async (): Promise<void> => {
     location = location.trim();
 
     // Pass results back to parent process
+    log.info(`[DISCOVERY-WORKER-SUCCESS]`, location);
     if (process.send) {
         process.send(location);
     }

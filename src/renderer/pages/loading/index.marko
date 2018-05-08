@@ -35,7 +35,7 @@ class {
             this.getEl("m-loading-text").textContent = "No Network Support..."
             this.state.support = false;
             localStorage.setItem("upnp.support", false);
-            setTimeout(() => history.replace("/no-support"), 1000);
+            setTimeout(() => history.replace("/home"), 1000);
         });
     }
 }

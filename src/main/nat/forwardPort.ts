@@ -12,11 +12,14 @@ import { log } from "../utils/logging";
  */
 export const forwardPort = (location: string, port: number): boolean => {
 
+    log.info(`[FORWARD-PORT]: attempting to forward port ${port}`);
     const args = [`-location=${location}`, `-port=${port}`];
 
     const result = execSyncBinary(C.GO_BINARIES, "forwardPort", ...args);
 
     const isPortSuccessfullyMapped = /Success/i.test(result);
+
+    log.info(`[FORWARD-PORT-RESULT]: ${isPortSuccessfullyMapped}`);
 
     // Update list of actively mapped ports
     if (isPortSuccessfullyMapped) {

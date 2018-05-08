@@ -80,7 +80,8 @@ class SocketClient {
             const nowEpoch = this.getTime();
             // Diff the times
             const timeTilTrigger = triggerEpoch - nowEpoch;
-            setTimeout(async () => startGame(), timeTilTrigger);
+            log.info(`[TIME-SYNC]: timeTilTrigger`, timeTilTrigger);
+            setTimeout(() => startGame(), timeTilTrigger);
             // Destroy the time sync service
             this.ts.destroy();
             this.browser.send("game-starting");

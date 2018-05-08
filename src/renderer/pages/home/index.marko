@@ -1,11 +1,21 @@
 import { history } from "marko-path-router"
 
 class {
+    onCreate() {
+        this.state = {
+            upnpSupport: null
+        };
+    }
 
     onMount() {
         console.log("fired [home] onMount()");
         this.electron = window.require("electron");
+        this.getUPnPSupport();
         this.initIpcListeners();
+    }
+
+    getUPnPSupport() {
+        this.state.upnpSupport = localStorage.getItem("upnp.support");
     }
 
     initIpcListeners() {
@@ -32,7 +42,10 @@ div class="hero-body"
         h2 class="subtitle" -- Helping players create competitive lobbies with one another
 
         section class="section"
-            a class="button is-primary is-large" on-click("createLobby") -- Create New Lobby
+            if(state.upnpSupport)
+                a class="button is-primary is-large" on-click("createLobby") -- Create New Lobby
+            else
+                a class="button is-primary is-large" disabled on-click("createLobby") -- Create New Lobby
 
 
         section class="section"

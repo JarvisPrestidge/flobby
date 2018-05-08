@@ -1,4 +1,5 @@
 import * as publicIp from "public-ip";
+import { log } from "./logging";
 const openPort = require("openport");
 
 /**
@@ -16,6 +17,7 @@ export const getOpenPort = async (): Promise<string> => {
                 reject(`No availble ports: ${err.message}`);
             }
             // Convert open port to string
+            log.info(`[GET-OPEN-PORT]: found open port: ${port.toString()}`);
             const ret = port.toString();
             resolve(ret);
         });
@@ -33,6 +35,7 @@ export const getPublicIPAddress = async (): Promise<string> => {
     return new Promise<string>((resolve) => {
 
         publicIp.v4().then(ip => {
+            log.info(`[GET-PUBLIC-IP]: found public ip: ${ip}`);
             resolve(ip)
         });
     });
