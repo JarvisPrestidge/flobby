@@ -109,7 +109,7 @@ class SocketClient {
     public startTimeSync() {
         this.ts = timesync.create({
             server: this.io,
-            interval: 5000
+            interval: 2000
         });
 
         this.ts.on("sync", (state: any) => {
@@ -146,7 +146,9 @@ class SocketClient {
     public destroy(): void {
         this.isDisconnected();
         this.io.destroy();
-        this.ts.destroy();
+        if (this.ts) {
+            this.ts.destroy();
+        }
     }
 }
 

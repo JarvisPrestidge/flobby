@@ -104,7 +104,7 @@ class SocketServer {
     startTimeSync() {
         log.info(`[SERVER-FUNC]: startTimeSync`);
         this.io.broadcast("start-time-sync");
-        setTimeout(() => this.stopTimeSync(), 10000);
+        setTimeout(() => this.stopTimeSync(), 25000);
     }
 
     stopTimeSync() {

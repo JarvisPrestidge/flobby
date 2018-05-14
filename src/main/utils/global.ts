@@ -9,6 +9,7 @@ import { BrowserWindow } from "electron";
  * @extends {NodeJS.Global}
  */
 interface IGlobal extends NodeJS.Global {
+    appPath: string;
     mainWindow: BrowserWindow,
     client: SocketClient,
     server: SocketServer,

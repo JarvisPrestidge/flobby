@@ -9,7 +9,7 @@ export const startDiscovery = (): void => {
     const discoveryWorkerPath = join(__dirname, "workers", "discovery.js");
 
     // Create child process
-    const child = fork(discoveryWorkerPath);
+    const child = fork(discoveryWorkerPath, [], { execArgv: ["--inspect=65235"] });
 
     // Send child process some work
     log.info(`[DISCOVERY-WORKER-START]`);

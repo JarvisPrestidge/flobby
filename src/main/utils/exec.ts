@@ -16,12 +16,14 @@ export const execAsyncBinaryAsAdmin = async (directory: string, fileName: string
 
     const binaryPath = join(directory, `${fileName}.exe`);
 
+    log.info(`[EXEC-ASYNC-BINARY-ADMIN]: path: ${binaryPath}`);
+
     const powershellCmd = `powershell -command "Start-Process ${binaryPath} -Verb runAs"`;
 
-    const { stderr } = await asyncExec(powershellCmd);
-
-    if (stderr) {
-        log.error(stderr);
+    try {
+        await asyncExec(powershellCmd);
+    } catch (err) {
+        log.error(`[EXEC-ASYNC-BINARY-ADMIN]: failed: ${err.message}`, err);
     }
 };
 
@@ -35,7 +37,18 @@ export const execSyncBinary = (directory: string, binary: string, ...args: strin
 
     const binaryPath = join(directory, `${binary}.exe`);
 
-    const result = execFileSync(binaryPath, args).toString();
+    log.info(`[EXEC-SYNC-BINARY]: path: ${binaryPath}`);
+
+    let result;
+    try {
+        result = execFileSync(binaryPath, args).toString();
+    } catch (err) {
+        log.error(`[EXEC-SYNC-BINARY]: failed: ${err.message}`, err);
+    }
+
+    if (!result) {
+        result = "";
+    }
 
     return result;
 };

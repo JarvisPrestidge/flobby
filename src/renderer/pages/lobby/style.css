@@ -32,10 +32,14 @@
 }
 
 #ready-up {
-    height: calc(20vh - 87px);
+    height: calc(10vh - 87px);
 }
 
 #player-list {
     overflow-y: auto;
     height: calc(70vh - 87px);
+}
+
+#phase-info {
+    height: calc(20vh - 87px);
 }

@@ -27,8 +27,8 @@
         },
         "extraFiles": [
             {
-                "from": "bin",
-                "to": "resources/bin",
+                "from": "bin/ahk",
+                "to": "resources/ahk",
                 "filter": ["**/*"]
             }
         ]
@@ -75,6 +75,7 @@
         "@types/socket.io": "^1.4.33",
         "@types/socket.io-client": "^1.4.32",
         "@types/uuid": "^3.4.3",
+        "asar": "^0.14.3",
         "browserfs": "^1.4.3",
         "bulma": "^0.7.1",
         "bulma-extensions": "^1.0.14",

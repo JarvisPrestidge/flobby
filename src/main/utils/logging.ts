@@ -1,8 +1,8 @@
 import * as bunyan from "bunyan";
-import { app } from "electron";
+import { homedir } from "os";
 import { join } from "path";
 
-const logPath = join(app.getPath("logs"), "logs.txt");
+const logPath = join(homedir(), "AppData", "Roaming", "flobby", "logs", "log.txt");
 
 const log = bunyan.createLogger({
     name: "flobby",
